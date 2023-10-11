@@ -2,7 +2,7 @@ Software Requirements and Design Document
 
 For
 
-Group <X>
+Group <3>
 
 
 
@@ -11,15 +11,17 @@ Version 1.0
 
 
 Authors: 
-Alice B
-Bob C
-Chris D
-Dan E
+Jada Doby 
+Marija Travoric 
+Jeyma Rodriguez 
+Laura Obermaier 
+Marget Rivas 
 
 
  
 1.	Overview (5 points)
  Give a general overview of the system in 1-2 paragraphs (similar to the one in the project proposal). 
+ A redesigned version of 'RateMyProfessor' has been conceptualized which boasts enhanced functionalities like enabling users to filter by institution, specific courses, academic majors, and individual professors. While users have the liberty to post reviews anonymously, there's a contemplation to introduce a feature that allows them to register accounts for a more personalized reviewing experience—though this might be a subsequent addition if it's pursued. A beneficial automation aspect could be integrating a function that periodically scans the FSU faculty web pages, cross-references existing names in our system, and seamlessly adds any missing ones. Furthermore, when users will have access to a suggestion table of other professors who have a similar teaching style or course characteristics, such as assessment methods (multiple-choice tests versus short answers), attendance policies, mandatory textbook requisitions, availability of extra credit opportunities, and other related parameters.
 2.	Functional Requirements (10 points)
 List the functional requirements in sentences identified by numbers and for each requirement state if it is of high, medium, or low priority. Each functional requirement is something that the system shall do. Include all the details required such that there can be no misinterpretations of the requirements when read. Be very specific about what the system needs to do (not how, just what). You may provide a brief design rationale for any requirement which you feel requires explanation for how and/or why the requirement was derived.
 3.	Non-functional Requirements (10 points)

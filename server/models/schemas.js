@@ -1,28 +1,55 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
+// Reviewer Schema
 const reviewerSchema = new Schema({
-    username: {type:String, required:true},
-    fullName: {type:String, required:true},
-    entryDate: {type:Date, default:Date.now,
-    }
+  username: { type: String, required: true },
+  fullName: { type: String, required: true },
+  entryDate: { type: Date, default: Date.now },
+  password: { type: String, required: true }
 });
 
+// Review Schema
+const reviewSchema = new Schema({
+  reviewer: { type: Schema.Types.ObjectId, ref: 'Reviewers', required: true },
+  workload: { type: Number, required: false },
+  participation: { type: Boolean, required: false },
+  popQuizzes: { type: Boolean, required: false },
+  difficulty: { type: Number, required: false },
+  overallScore: { type: Number, required: false },
+  groupProject: { type: Boolean, required: false },
+  professorAccessibility: { type: Number, required: false },
+  quizQType: { type: String, required: false },
+  anonymousReviews: { type: Boolean, required: false },
+  attendance: { type: Boolean, required: false },
+  textbook: { type: Boolean, required: false },
+  extraCredit: { type: Boolean, required: false },
+  professor: { type: Schema.Types.ObjectId, ref: 'Professors', required: false }
+  //course: { type: Schema.Types.ObjectId, ref: 'Courses', required: false },
+});
+
+// Professor Schema
 const professorSchema = new Schema({
-    username: {type:String, required:true},
-    fullName: {type:String, required:true},
-    joinedDate: {type:Date, default:Date.now},
-    rating: {type:Int16Array, required:false, defaul:null},
-    workload: {type:Int16Array, required:false, defaul:null},
-    popQuizzes: {type:Boolean,required:false, defaul:null}, 
-    participation: {type:Boolean,required:false, defaul:null},
-    difficulty: {type:Int16Array, required:false, defaul:null},
-    overallScore: {type:Int16Array, required:false, defaul:null},
-    groupProject:{type:Boolean,required:false, defaul:null}
+  username: { type: String, required: true },
+  fullName: { type: String, required: true },
+  joinedDate: { type: Date, default: Date.now },
+  rating: { type: Number, default: null },
+  workload: { type: Number, default: null },
+  popQuizzes: { type: Boolean, default: null }, 
+  participation: { type: Boolean, default: null },
+  difficulty: { type: Number, default: null },
+  overallScore: { type: Number, default: null },
+  groupProject: { type: Boolean, default: null }
 });
 
-const Reviewers = mongoose.model('reviewers', reviewerSchema, 'reviewers');
-const Professors = mongoose.model('professors', professorSchema, 'professors');
-const mySchemas = {'Reviewers':Reviewers, 'Professors':Professors};
+// Create models
+const Reviewers = mongoose.model('Reviewers', reviewerSchema);
+const Reviews = mongoose.model('Reviews', reviewSchema);
+const Professors = mongoose.model('Professors', professorSchema);
 
-module.exports = mySchemas;
+// Export the schemas
+module.exports = {
+  Reviewers,
+  Reviews,
+  Professors
+};

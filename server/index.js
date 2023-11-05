@@ -1,8 +1,9 @@
 const express = require('express')
 const cors = require('cors')
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser') //we could use express stuff instead
 const router = require('./routes/router')
 const mongoose = require('mongoose')
+const mySchemas = require('./models/schemas');
 require('dotenv/config')
 
 const app = express();
@@ -18,6 +19,12 @@ mongoose.connect(process.env.DB_URI, {useNewUrlParser:true, useUnifiedTopology:t
 .catch( (err) => {
     console.log(err);
 });
+
+// Middlewares
+app.use(express.json());
+
+
+
 
 
 const PORT = process.env.PORT || 4000; // backend routing port

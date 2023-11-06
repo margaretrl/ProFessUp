@@ -30,16 +30,8 @@ const reviewSchema = new Schema({
 
 // Professor Schema
 const professorSchema = new Schema({
-  username: { type: String, required: true },
   fullName: { type: String, required: true },
-  joinedDate: { type: Date, default: Date.now },
-  rating: { type: Number, default: null },
-  workload: { type: Number, default: null },
-  popQuizzes: { type: Boolean, default: null }, 
-  participation: { type: Boolean, default: null },
-  difficulty: { type: Number, default: null },
-  overallScore: { type: Number, default: null },
-  groupProject: { type: Boolean, default: null }
+  joinedDate: { type: Date, default: Date.now }
 });
 
 // Create models

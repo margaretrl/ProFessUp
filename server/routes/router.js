@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Reviewers, Reviews } = require('../models/schemas.js'); // Make sure this path is correct
+const { Reviewers, Reviews, Professors } = require('../models/schemas.js'); // Make sure this path is correct
 
 // ----------------
 // REVIEWERS ROUTES
@@ -197,5 +197,27 @@ router.put('/reviews/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
 }
     });
+
+// ----------------
+// PROFESSOR ROUTES
+// ----------------
+
+// POST New professor
+router.post('/professors', async (req, res) => {
+  try {
+    const { fullName } = req.body;
+    if (!fullName) {
+      return res.status(400).send({ message: 'Full name is required' });
+    }
+    const newProfessor = new Professors({
+      fullName: fullName
+    });
+    await newProfessor.save();
+    res.status(201).send(newProfessor);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
 
 module.exports = router;

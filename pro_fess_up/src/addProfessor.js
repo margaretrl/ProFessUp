@@ -1,53 +1,31 @@
-const mongoose = require('mongoose');
-/*
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const router = require('../server/routes/router')
-const mongoose = require('mongoose')
-require('dotenv/config')
-const app = express();
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
-app.use('/', router);*/
-const Schema = mongoose.Schema;
-
-const professorSchema = new Schema({
-    username: {type:String, required:true},
-    fullName: {type:String, required:true},
-    joinedDate: {type:Date, default:Date.now},
-    rating: {type:Int16Array, required:false, defaul:null},
-    workload: {type:Int16Array, required:false, defaul:null},
-    popQuizzes: {type:Boolean,required:false, defaul:null}, 
-    participation: {type:Boolean,required:false, defaul:null},
-    difficulty: {type:Int16Array, required:false, defaul:null},
-    overallScore: {type:Int16Array, required:false, defaul:null},
-    groupProject:{type:Boolean,required:false, defaul:null}
-});
-
-
-const Professors = mongoose.model('professors', professorSchema, 'professors');
-/*
-// DB Connection
-mongoose.connect(process.env.DB_URI, {useNewUrlParser:true, useUnifiedTopology:true})
-.then( () => {
-    console.log('DB Connected!');
-})
-.catch( (err) => {
-    console.log(err);
-});
-
-
-const PORT = process.env.PORT || 4000; // backend routing port
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-});*/
-
 module.exports = Professors;
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Wait for the DOM to be fully loaded
+// Function to add a professor using POST request
+async function addProfessor(professorData) {
+    try {
+        const response = await fetch('http://localhost:4000/professor', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(professorData),
+        });
+  
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Professor added:', jsonResponse);
+            // Reset the form fields
+            titleSelect.value = "N/A";
+            nameInput.value = "";
+        } else {
+            console.error('Failed to add professor');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
+document.addEventListener("DOMContentLoaded", function () {
     // Get references to the HTML elements
     const titleSelect = document.getElementById("titleSelect");
     const nameInput = document.getElementById("nameInput");
@@ -59,27 +37,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedTitle = titleSelect.value;
         const professorName = nameInput.value;
 
-        const newProfessor = new Professors({
-            username: selectedTitle,
+        const professorData = {
             fullName: professorName,
-            joinedDate: Date.now,
-            rating: null,
-            workload: null,
-            popQuizzes: null, 
-            participation: null,
-            difficulty: null,
-            overallScore: null,
-            groupProject: null
-          });
+        };
 
-        newProfessor.save()
-        .then((result) => {
-            console.log('New professor added:', result);
-            titleSelect.value = "N/A";
-            nameInput.value = "";
-        })
-        .catch((err) => {
-            console.error('Error adding professor:', err);
-        });
+        // Call the function to add a professor
+        await addProfessor(professorData);
     });
 });

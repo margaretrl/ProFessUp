@@ -4,115 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProfessUp</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <title>ProFessUp Landing Page</title>
     <style>
-        /* Add your CSS styles here */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: white; /* Updated overall background color */
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #9CD3D9; /* Updated banner color */
-            color: white;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-
-        .signin-link,
-        .signup-link {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-        }
-
-        .signin-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .signup-link {
-            background-color: #B7Bf7A; /* Orange color for Sign Up button */
-        }
-
-        .signup-link:hover {
-            background-color: rgba(255, 87, 34, 0.8);
-        }
-
-        .search-container {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .search-input {
-            padding: 10px;
-            width: 300px;
-            font-size: 16px;
-        }
-
-        .search-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #B7Bf7A; /* Updated button color */
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .social-icons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-        }
-
-        .social-icons a {
-            text-decoration: none;
-            color: #B7Bf7A; /* Color for social icons */
-            margin-left: 10px;
-        }
-
-        .social-icons a:hover {
-            color: #FF5722; /* Updated color on hover */
-        }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
+        .header { background-color: #28a745; color: white; padding: 50px; text-align: center; }
+        .content { margin: 20px; display: flex; flex-direction: column; align-items: center; }
+        .feature { margin: 20px; text-align: center; }
+        .search-bar { margin-top: 20px; display: flex; justify-content: center; align-items: center; }
+        .search-input { padding: 10px; width: 300px; font-size: 16px; }
+        .search-button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        .sign-in-button, .sign-up-button { margin-top: 20px; padding: 8px 16px; font-size: 14px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100px; margin-left: auto; margin-right: auto;}
+        .social-icons {margin-left: auto; margin-right: auto; width: 100px; font-size: 24px;}
+        .logo-container img { max-width: 150px; height: auto;}
     </style>
 </head>
 
 <body>
-    <!-- Header section -->
-    <header>
-        <h1>ProfessUp</h1>
-        <nav>
-            <div>
-                <a class="signin-link" onclick="window.location.href='/signIn'">Sign In</a>
-                <a class="signup-link" onclick="window.location.href='/signup'">Sign Up</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Main content section -->
-    <main>
-        <div class="search-container">
+    <div class="header">
+        <h1>Welcome to ProFessUp</h1>
+        <p>Find the best professors and courses at your university</p>
+        <div class="search-bar">
             <input type="text" class="search-input" placeholder="Search...">
-            <button class="search-button">Search</button>
+            <div class="search-button" onclick="window.location.href='/searchResults'">Search</div>
         </div>
-    </main>
+        <p> ProFessUp allows you to search for professors and courses based on real student reviews.</p>
+        <p> Make informed decisions about your education.</p>
+        <div class="sign-in-button" onclick="window.location.href='/signIn'">Sign In</div>
+        <div class="sign-up-button" onclick="window.location.href='/signup'">Sign Up</div>
+    </div>
+    <div class="content">
+        <div class="feature">
+            <div class="logo-container">
+                <img src="/testlogo.png" alt="Logo 1">
+                <img src="/test2.png" alt="Logo 2">
+            </div>
+            <h3>A safe and efficient platform</h3>
+            <p>More than a million users trust ProFessUp to manage their educational needs.</p>
+        </div>
+    </div>
 
-    <!-- Footer section -->
     <footer>
         <div class="social-icons">
             <a href="#" class="fab fa-instagram"></a>
@@ -121,8 +52,7 @@
         </div>
        
     </footer>
-
-        <!-- Include compiled JavaScript -->
-        <script type="module" src="script.js"></script>
+    
+    <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -49,18 +49,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // Wait for the DOM to be fully loaded
 
     // Get references to the HTML elements
-    const titleSelect = document.getElementById("titleSelect");
     const nameInput = document.getElementById("nameInput");
     const addProfessorButton = document.getElementById("addProfessorButton");
 
     // Add a click event listener to the "Add Professor" button
     addProfessorButton.addEventListener("click", async function () {
         // Get the selected title and name from the input fields
-        const selectedTitle = titleSelect.value;
         const professorName = nameInput.value;
 
         const newProfessor = new Professors({
-            username: selectedTitle,
             fullName: professorName,
             joinedDate: Date.now,
             rating: null,

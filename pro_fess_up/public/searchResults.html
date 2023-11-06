@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="path/to/your/styles.css">
+    <title>Search Results - ProFessUp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px; 
+        }      
+        .sign-in-button, .sign-up-button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px; 
+        }
+        .header > div {
+            display: flex;
+            align-items: center;
+        }
+        .search-results-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .result-box {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 45%;
+            max-width: 300px;
+            margin: 10px;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .result-description {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search...">
+            <div class="search-button" onclick="window.location.href='/searchResults'">Search</div>
+        </div>
+        <div>
+            <div class="sign-in-button" onclick="window.location.href='/signIn'">Sign In</div>
+            <div class="sign-up-button" onclick="window.location.href='/signup'">Sign Up</div>
+        </div>
+    </div>
+
+    <div class="search-results-container">
+        <div class="result-box">
+            <div class="result-title">Professor Name 1</div>
+            <div class="result-description">Course Name 1</div>
+        </div>
+        <div class="result-box">
+            <div class="result-title">Professor Name 2</div>
+            <div class="result-description">Course Name 2</div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

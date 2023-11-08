@@ -29,6 +29,19 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('.search-button not found');
     }
 
+    // REVIEW TEST BUTTON - DELETE AFTER
+    var reviewButton = document.querySelector('.review-button');
+    if (searchButton) {
+        reviewButton.addEventListener('click', function() {
+            window.location.href = 'review.html';
+        });
+    } else {
+        console.error('.review-button not found');
+    }
+
+
+
+
     var addProfessorButton = document.querySelector('.add-professor-link');
     if (addProfessorButton) {
         addProfessorButton.addEventListener('click', function () {

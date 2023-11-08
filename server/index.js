@@ -7,6 +7,7 @@ const mySchemas = require('./models/schemas');
 require('dotenv/config')
 
 const app = express();
+app.use(cors()); // This will enable CORS for all routes and origins
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use('/', router);
@@ -22,9 +23,6 @@ mongoose.connect(process.env.DB_URI, {useNewUrlParser:true, useUnifiedTopology:t
 
 // Middlewares
 app.use(express.json());
-
-
-
 
 
 const PORT = process.env.PORT || 4000; // backend routing port

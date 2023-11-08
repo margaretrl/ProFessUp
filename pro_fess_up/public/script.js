@@ -29,12 +29,47 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('.search-button not found');
     }
 
-    var addProfessorButton = document.querySelector('.add-professor-link');
-    if (addProfessorButton) {
-        addProfessorButton.addEventListener('click', function () {
-            window.location.href = 'addProfessor.html';
+    const nameInput = document.getElementById("nameInput");
+    const addProfessorButton = document.getElementById("addProfessorButton");
+
+    // Add a click event listener to the "Add Professor" button
+    addProfessorButton.addEventListener("click", async function () {
+        // Get the selected title and name from the input fields
+        const professorName = nameInput.value;
+
+        const newProfessor = new Professors({
+            fullName: professorName,
+            joinedDate: Date.now
+          });
+
+        newProfessor.save()
+        .then((result) => {
+            console.log('New professor added:', result);
+            nameInput.value = "";
+        })
+        .catch((err) => {
+            console.error('Error adding professor:', err);
         });
-    } else {
-        console.error('.search-button not found');
-    }
+    });
+
+    const clickProfessorButton = document.getElementById("clickProfessorButton");
+    const content = document.getElementById("content");
+
+    // click a click event listener to the "Click Professor" button
+    clickProfessorButton.addEventListener("click", async function () {
+        const title = "Professor's Title";
+
+        // Open a new window in the current window
+        var myWindow = window.open("/professor", "_self");
+
+        // Write content to the new window
+        if (myWindow) {
+            myWindow.document.write(`
+                <h1>${title}</h1>
+                <p>This is a professor's introduction.</p>
+            `);
+        } else {
+            console.error("Popup window blocked or not supported by the browser.");
+        }
+    });
 });

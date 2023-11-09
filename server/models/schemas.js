@@ -30,26 +30,26 @@ const reviewSchema = new Schema({
 
 // Professor Schema
 const professorSchema = new Schema({
-  username: { type: String, required: true },
   fullName: { type: String, required: true },
-  joinedDate: { type: Date, default: Date.now },
-  rating: { type: Number, default: null },
-  workload: { type: Number, default: null },
-  popQuizzes: { type: Boolean, default: null }, 
-  participation: { type: Boolean, default: null },
-  difficulty: { type: Number, default: null },
-  overallScore: { type: Number, default: null },
-  groupProject: { type: Boolean, default: null }
+  joinedDate: { type: Date, default: Date.now }
 });
+
+// Courses Schema
+const coursesSchema = new Schema({
+  name: { type: String, required: true }
+});
+
 
 // Create models
 const Reviewers = mongoose.model('Reviewers', reviewerSchema);
 const Reviews = mongoose.model('Reviews', reviewSchema);
 const Professors = mongoose.model('Professors', professorSchema);
+const Courses = mongoose.model('Courses', coursesSchema);
 
 // Export the schemas
 module.exports = {
   Reviewers,
   Reviews,
-  Professors
+  Professors,
+  Courses
 };

@@ -74,19 +74,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get the selected title and name from the input fields
             const professorName = nameInput.value;
 
-            const newProfessor = new Professors({
-                fullName: professorName,
-                joinedDate: Date.now
-            });
+            const professorData = {
+                fullName: professorName
+            };
 
-            newProfessor.save()
-            .then((result) => {
-                console.log('New professor added:', result);
-                nameInput.value = "";
-            })
-            .catch((err) => {
-                console.error('Error adding professor:', err);
-            });
+            // Make a POST request to the server's /professors endpoint
+            try {
+                const response = await fetch('/professors', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(professorData)
+                });
+
+                if (response.ok) {
+                    // Professor successfully added to the database
+                    nameInput.value = "";
+                    console.log('Professor added successfully');
+                } else {
+                    console.error('Error adding professor:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error adding professor:', error.message);
+            }
         });
     }
 });

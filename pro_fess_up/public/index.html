@@ -73,6 +73,15 @@
             border: none;
             cursor: pointer;
         }
+        
+        .review-button{
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #B7Bf7A; /* Updated button color */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
 
         .social-icons {
             position: fixed;
@@ -90,14 +99,14 @@
             color: #FF5722; /* Updated color on hover */
         }
         
-        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
+        body { font-family:Georgia, 'Times New Roman', Times, serif New Roman; background-color: #f5f5f5; margin: 0; padding: 0; }
         .header { background-color: #28a745; color: white; padding: 50px; text-align: center; }
         .content { margin: 20px; display: flex; flex-direction: column; align-items: center; }
         .feature { margin: 20px; text-align: center; }
         .search-bar { margin-top: 20px; display: flex; justify-content: center; align-items: center; }
         .search-input { padding: 10px; width: 300px; font-size: 16px; }
         .search-button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-        .sign-in-button, .sign-up-button { margin-top: 20px; padding: 8px 16px; font-size: 14px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100px; margin-left: auto; margin-right: auto;}
+        .sign-in-button, .sign-up-button { margin-top: 20px; padding: 8px 16px; font-size: 14px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100px; margin-left: auto; margin-right: auto;} .review-button {margin-top: 20px; padding: 8px 16px; font-size: 14px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100px; margin-left: auto; margin-right: auto;}
         .social-icons {margin-left: auto; margin-right: auto; width: 100px; font-size: 24px;}
         .logo-container img { max-width: 150px; height: auto;}
     </style>
@@ -112,10 +121,12 @@
             <div class="search-button" onclick="window.location.href='/searchResults'">Search</div>
         </div>
     </main>
-        <p> ProFessUp allows you to search for professors and courses based on real student reviews.</p>
+        <p> ProFessUp allows you to search for professors and 
+            courses based on real student reviews.</p>
         <p> Make informed decisions about your education.</p>
         <div class="sign-in-button" onclick="window.location.href='/signIn'">Sign In</div>
         <div class="sign-up-button" onclick="window.location.href='/signup'">Sign Up</div>
+        <div class="review-button" onclick="window.location.href='/review'">Review test</div>
     </div>
     <div class="content">
         <div class="feature">
@@ -123,8 +134,8 @@
                 <img src="/testlogo.png" alt="Logo 1">
                 <img src="/test2.png" alt="Logo 2">
             </div>
-            <h3>A safe and efficient platform</h3>
-            <p>More than a million users trust ProFessUp to manage their educational needs.</p>
+            <h3>A Safe and Efficient Platform</h3>
+            <p>More Than A Million Users Trust ProFessUp To Manage Their Educational Needs.</p>
         </div>
     </div>
 
@@ -133,6 +144,7 @@
             <a href="#" class="fab fa-instagram"></a>
             <a href="#" class="fab fa-twitter"></a>
             <a href="#" class="fab fa-facebook"></a>
+            <a href="#" class="fab fa-snapchat"></a>
         </div>
        
     </footer>

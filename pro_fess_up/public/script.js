@@ -75,7 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const professorName = nameInput.value;
 
             const professorData = {
-                fullName: professorName
+                fullName: professorName,
+                joinedDate: Date.now
             };
 
             // Make a POST request to the server's /professors endpoint
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     nameInput.value = "";
                     console.log('Professor added successfully');
                 } else {
-                    console.error('Error adding professor:', response.statusText);
+                    console.error('Error adding professor1:', response.statusText);
                 }
             } catch (error) {
                 console.error('Error adding professor:', error.message);

@@ -293,6 +293,16 @@ app.post('/professors', async (req, res) => {
   }
 });
 
+// GET all professors
+app.get('/professors', async (req, res) => {
+  try {
+      const professors = await Professors.find({});
+      res.json(professors);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
 // ----------------
 // COURSES ROUTES
 // ----------------

@@ -42,18 +42,27 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('.search-button not found');
     }
 
-    if (window.location.pathname.endsWith('searchResults.html')) {
-        const clickProfessorButton = document.getElementById("clickProfessorButton");
-        const content = document.getElementById("content");
+    // Function to create a professor button
+    function createProfessorButton(professor) {
+        const button = document.createElement("button");
+        button.classList.add("result-box");
 
-        // click a click event listener to the "Click Professor" button
-        clickProfessorButton.addEventListener("click", async function () {
-            const title = "Professor's Title";
+        const titleElement = document.createElement("div");
+        titleElement.classList.add("result-title");
+        titleElement.textContent = professor.fullName; // Use the 'fullName' property
 
-            // Open a new window in the current window
+        const descriptionElement = document.createElement("div");
+        descriptionElement.classList.add("result-description");
+        descriptionElement.textContent = professor.course; // Replace 'course' with the actual field name in your professor data
+
+        button.appendChild(titleElement);
+        button.appendChild(descriptionElement);
+
+        button.addEventListener("click", async function () {
+            // Open a new window with professor details
+            const title = professor.fullName; // Replace 'title' with the actual field name in your professor data
             var myWindow = window.open("/professor", "_self");
 
-            // Write content to the new window
             if (myWindow) {
                 myWindow.document.write(`
                     <h1>${title}</h1>
@@ -63,42 +72,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Popup window blocked or not supported by the browser.");
             }
         });
+
+        return button;
     }
 
+    // Fetch professors from the server and create buttons
     if (window.location.pathname.endsWith('searchResults.html')) {
-        const nameInput = document.getElementById("nameInput");
-        const addProfessorButton = document.getElementById("addProfessorButton");
+        const professorsContainer = document.getElementById("professors-container");
 
-        // Add a click event listener to the "Add Professor" button
-        addProfessorButton.addEventListener("click", async function () {
-            // Get the selected title and name from the input fields
-            const professorName = nameInput.value;
-
-            const professorData = {
-                fullName: professorName,
-                joinedDate: Date.now
-            };
-
-            // Make a POST request to the server's /professors endpoint
-            try {
-                const response = await fetch('/professors', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(professorData)
+        // Assuming you have a route that returns a JSON array of professors
+        fetch("/professors")
+            .then((response) => response.json())
+            .then((professors) => {
+                professors.forEach((professor) => {
+                    const button = createProfessorButton(professor);
+                    professorsContainer.appendChild(button);
                 });
-
-                if (response.ok) {
-                    // Professor successfully added to the database
-                    nameInput.value = "";
-                    console.log('Professor added successfully');
-                } else {
-                    console.error('Error adding professor1:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error adding professor:', error.message);
-            }
-        });
+            })
+            .catch((error) => {
+                console.error("Error fetching professors:", error);
+            });
     }
+
 });

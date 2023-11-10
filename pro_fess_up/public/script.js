@@ -76,6 +76,43 @@ document.addEventListener('DOMContentLoaded', function() {
         return button;
     }
 
+    if (window.location.pathname.endsWith('searchResults.html')) {
+        const nameInput = document.getElementById("nameInput");
+        const addProfessorButton = document.getElementById("addProfessorButton");
+
+        // Add a click event listener to the "Add Professor" button
+        addProfessorButton.addEventListener("click", async function () {
+            // Get the selected title and name from the input fields
+            const professorName = nameInput.value;
+
+            const professorData = {
+                fullName: professorName,
+                joinedDate: Date.now
+            };
+
+            // Make a POST request to the server's /professors endpoint
+            try {
+                const response = await fetch('/professors', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(professorData)
+                });
+
+                if (response.ok) {
+                    // Professor successfully added to the database
+                    nameInput.value = "";
+                    console.log('Professor added successfully');
+                } else {
+                    console.error('Error adding professor1:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error adding professor:', error.message);
+            }
+        });
+    }
+
     // Fetch professors from the server and create buttons
     if (window.location.pathname.endsWith('searchResults.html')) {
         const professorsContainer = document.getElementById("professors-container");

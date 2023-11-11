@@ -303,6 +303,42 @@ app.get('/professors', async (req, res) => {
   }
 });
 
+// DELETE professor by id
+app.delete('/professors/:id', async (req, res) => {
+  try {
+      const professor = await Professors.findByIdAndDelete(req.params.id);
+      if (professor) {
+          res.json({ message: 'Professor deleted successfully' });
+      } else {
+          res.status(404).json({ message: 'Professor not found' });
+      }
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+// PUT request to update a review
+app.put('/professors/:id', async (req, res) => {
+  try {
+    const updatedProfessor = await Professors.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true, // return the updated document
+        runValidators: true // run validators on update
+      }
+    );
+
+    if (!updatedProfessor) {
+      return res.status(404).json({ message: 'Professor not found' });
+    }
+
+    res.json(updatedProfessor);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 // ----------------
 // COURSES ROUTES
 // ----------------

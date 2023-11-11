@@ -200,17 +200,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fetch professors from the server and create buttons
     if (window.location.pathname.endsWith('searchResults.html')) {
         const professorsContainer = document.getElementById("professors-container");
-
-        // Assuming you have a route that returns a JSON array of professors
+        const professorSearchInput = document.getElementById("professor-search");
+    
+        // Fetch professors from the server and create buttons
         fetch("/professors")
             .then((response) => response.json())
             .then((professors) => {
-                professors.forEach((professor) => {
-                    const button = createProfessorButton(professor);
-                    professorsContainer.appendChild(button);
+                // Store the original list of professors for filtering
+                const originalProfessors = professors;
+    
+                // Function to filter professors based on the search input
+                function filterProfessors(searchQuery) {
+                    const filteredProfessors = originalProfessors.filter((professor) =>
+                        professor.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+    
+                    // Clear the professors container
+                    professorsContainer.innerHTML = "";
+    
+                    // Create buttons for filtered professors
+                    filteredProfessors.forEach((professor) => {
+                        const button = createProfessorButton(professor);
+                        professorsContainer.appendChild(button);
+                    });
+                }
+    
+                // Initial loading of professors
+                filterProfessors("");
+    
+                // Add an input event listener for live search
+                professorSearchInput.addEventListener("input", function () {
+                    const searchQuery = professorSearchInput.value;
+                    filterProfessors(searchQuery);
                 });
             })
             .catch((error) => {

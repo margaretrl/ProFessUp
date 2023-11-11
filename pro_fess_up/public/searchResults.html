@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="path/to/your/styles.css">
     <title>Search Results - ProFessUp</title>
+    <script>
+        function performSearch() {
+            var searchQuery = document.getElementById("search-input").value;
+
+            var encodedSearchQuery = encodeURIComponent(searchQuery);
+
+            window.location.href = '/searchResults.html?query=' + encodedSearchQuery;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('query');
+        // Use the searchQuery in your JavaScript code as needed
+        console.log("Search Query:", searchQuery);
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -137,8 +150,8 @@
 <body>
     <div class="header">
         <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Search...">
-            <div class="search-button" onclick="window.location.href='/searchResults'">Search</div>
+            <input type="text" id="professor-search" class="search-input" placeholder="Search...">
+            <button class="search-button" onclick="performSearch()">Search</button>
         </div>
         <div>
             <div class="sign-in-button" onclick="window.location.href='/signIn'">Sign In</div>

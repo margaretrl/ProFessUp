@@ -303,6 +303,20 @@ app.get('/professors', async (req, res) => {
   }
 });
 
+// GET one reviewer
+app.get('/professors/:id', async (req, res) => {
+  try {
+      const professor = await Professor.findById(req.params.id);
+      if (professor) {
+          res.json(professor);
+      } else {
+          res.status(404).json({ message: 'Professor not found' });
+      }
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
 // DELETE professor by id
 app.delete('/professors/:id', async (req, res) => {
   try {

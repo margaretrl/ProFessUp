@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Reviewers, Reviews, Professors, Courses } = require('../models/schemas.js'); // Make sure this path is correct
+const { Reviewers, Reviews, Professors, Courses, Majors } = require('../models/schemas.js'); // Make sure this path is correct
 
 // ----------------
 // REVIEWERS ROUTES
@@ -250,6 +250,72 @@ router.get('/courses', async (req, res) => {
   }
 });
 
+// --------------
+// MAJORS ROUTES
+// --------------
+
+// GET all majors
+router.get('/majors', async (req, res) => {
+  try {
+      const majors = await Majors.find({}).populate('major');
+      res.json(majors);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+//CREATE major
+router.post('/majors', async (req, res) => {
+  try {
+      const newMajor = new Majors({
+        name: req.body.name
+      });
+
+      // Save the new Reviewer to the database
+      const savedMajor = await newMajor.save();
+
+      // Send back the created Reviewer data with a 201 status code (Created)
+      res.status(201).json(savedMajor);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+// Update major
+router.put('/majors/:id', async (req, res) => {
+  try {
+    const updatedMajor = await Majors.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true, // return the updated document
+        runValidators: true // run validators on update
+      }
+    );
+
+    if (!updatedMajor) {
+      return res.status(404).json({ message: 'Major not found' });
+    }
+
+    res.json(updatedMajor);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+  // DELETE major
+  router.delete('/majors/:id', async (req, res) => {
+    try {
+      const major = await Majors.findByIdAndDelete(req.params.id);
+      if (major) {
+        res.json({ message: 'Major deleted successfully' });
+    } else {
+        res.status(404).json({ message: 'Major not found' });
+    }
+ } catch (error) {
+    res.status(500).json({ message: error.message });
+}
+});
 
 
 module.exports = router;

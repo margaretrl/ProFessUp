@@ -38,7 +38,15 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('.review-button not found');
     }
-
+    // COURSE TEST BUTTON - DELETE AFTER
+    var courseButton = document.querySelector('.course-button');
+    if (searchButton) {
+        courseButton.addEventListener('click', function() {
+            window.location.href ='course.html';
+        });
+    } else {
+        console.error('.course-button not found');
+    }
 
     const nameInput = document.getElementById("nameInput");
     const addProfessorButton = document.getElementById("addProfessorButton");

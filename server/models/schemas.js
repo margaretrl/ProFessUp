@@ -39,17 +39,24 @@ const coursesSchema = new Schema({
   name: { type: String, required: true }
 });
 
+// Major Schema
+const majorSchema = new Schema({
+  name: { type: String, required: true },
+
+});
 
 // Create models
 const Reviewers = mongoose.model('Reviewers', reviewerSchema);
 const Reviews = mongoose.model('Reviews', reviewSchema);
 const Professors = mongoose.model('Professors', professorSchema);
 const Courses = mongoose.model('Courses', coursesSchema);
+const Majors = mongoose.model('Majors', majorSchema);
 
 // Export the schemas
 module.exports = {
   Reviewers,
   Reviews,
   Professors,
-  Courses
+  Courses,
+  Majors
 };

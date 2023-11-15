@@ -226,15 +226,16 @@ router.post('/professors', async (req, res) => {
 // POST NEW COURSE
 router.post('/courses', async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, course_id } = req.body;
     if (!name) {
       return res.status(400).send({ message: 'Course name is required' });
     }
-    const newCourses = new Courses({
-      name: name
+    const newCourse = new Courses({
+      name,        
+      course_id     
     });
-    await newCourses.save();
-    res.status(201).send(newCourses);
+    await newCourse.save();
+    res.status(201).send(newCourse);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }

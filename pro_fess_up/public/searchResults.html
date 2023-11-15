@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="path/to/your/styles.css">
     <title>Search Results - ProFessUp</title>
+    <script>
+        function performSearch() {
+            var searchQuery = document.getElementById("search-input").value;
+
+            var encodedSearchQuery = encodeURIComponent(searchQuery);
+
+            window.location.href = '/searchResults.html?query=' + encodedSearchQuery;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('query');
+        // Use the searchQuery in your JavaScript code as needed
+        console.log("Search Query:", searchQuery);
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,12 +91,17 @@
             color: #555;
         }
 
-        .professor-container {
+        .add-professor-container {
             text-align: center;
             position: absolute;
             bottom: 5%;
             left: 50%;
             transform: translateX(-50%);
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .title-selector {
@@ -92,28 +110,39 @@
             font-size: 16px;
         }
 
-        .name-input {
-            padding: 10px;
+        .add-professor-input {
+            padding: 12px;
             width: 300px;
             font-size: 16px;
             margin-left: 5px;
         }
 
-        .add-button {
+        .add-professor-button {
             background-color: #007bff; /* Updated button color */
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5%;
             font-size: 16px;
-            padding: 10px 20px;
-            margin-left: 5px;
+            padding: 12px 20px;
+            margin-left: 10px;
         }
 
-        .form-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .delete-professor-button {
+            padding: 4px 8px;
+            margin-left: 2px;
+            margin-right: 2px;
+            font-size: 11px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .result-box {
+            position: relative;
         }
     </style>
 </head>
@@ -121,8 +150,8 @@
 <body>
     <div class="header">
         <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Search...">
-            <div class="search-button" onclick="window.location.href='/searchResults'">Search</div>
+            <input type="text" id="professor-search" class="search-input" placeholder="Search...">
+            <button class="search-button" onclick="performSearch()">Search</button>
         </div>
         <div>
             <div class="sign-in-button" onclick="window.location.href='/signIn'">Sign In</div>
@@ -131,24 +160,19 @@
     </div>
 
     <div>
-        <div class="search-results-container">
-            <button id="clickProfessorButton" class="result-box" type="submit">
-                <div class="result-title">Professor Name 1</div>
-                <div class="result-description">Course Name 1</div>
-                <div id="content"></div>
-            </button>
-            <div class="result-box">
-                <div class="result-title">Professor Name 2</div>
-                <div class="result-description">Course Name 2</div>
-            </div>
+        <div class="search-results-container" id="professors-container">
+            <script type="text/template" id="professor-button-template">
+                <button class="result-box">
+                    <div class="result-title"></div>
+                    <div class="result-description"></div>
+                </button>
+            </script>
         </div>
     </div>
 
-    <div class="professor-container">
-        <div class="form-group">
-            <input type="text" class="name-input" id="nameInput" placeholder="Name" required>
-            <button id="addProfessorButton" class="add-button" type="submit">Add Professor</button>
-        </div>
+    <div class="add-professor-container">
+        <input type="text" class="add-professor-input" id="nameInput" placeholder="Name" required>
+        <button id="addProfessorButton" class="add-professor-button" type="submit">Add Professor</button>
     </div>
 
     <script type="module" src="script.js"></script>

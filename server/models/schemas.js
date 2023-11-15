@@ -35,8 +35,9 @@ const professorSchema = new Schema({
 });
 
 // Courses Schema
-const coursesSchema = new Schema({
-  name: { type: String, required: true }
+const coursesSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  course_id : { type: String, required: false }
 });
 
 // Major Schema

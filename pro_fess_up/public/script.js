@@ -198,9 +198,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error adding professor:', error.message);
             }
         });
-    }
+    
 
-    if (window.location.pathname.endsWith('searchResults.html')) {
+    if(window.location.pathname.endsWith('searchResults.html')) {
         const professorsContainer = document.getElementById("professors-container");
         const professorSearchInput = document.getElementById("professor-search");
     

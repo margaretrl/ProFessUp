@@ -104,12 +104,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             color: white;
                             border: none;
                             cursor: pointer;
-                        }
+                        }           
                     </style>
                     <div class="prof-data">
                         <h1>${title}</h1>
                         <button class="edit-button">Edit Title</button>
                     </div>
+                    <div class="course-selection">
+                        <h2>Select a Course</h2>
+                        <select id="courseSelectDropdown">
+                            <option value="">Select a course</option>
+                            <!-- Course options will be added here -->
+                        </select>    
+                        <button id="addCourseButton">Add Course</button>
+                    </div>    
                 `);
                 const updateButton = myWindow.document.querySelector(".edit-button");
                 updateButton.classList.add("update-button");
@@ -137,6 +145,48 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 });
+                //jeyma's code 
+                // Start of code for course selection in myWindow
+                myWindow.onload = function() {
+                    // Call to populate the course dropdown
+                    populateCoursesDropdownInMyWindow(myWindow, professor._id);
+
+                    // Add event listeners for course selection and adding a new course
+                    const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
+                    courseSelectDropdown.addEventListener("change", function() {
+                        const selectedCourseId = courseSelectDropdown.value;
+                        // Handle course selection change
+                        // TODO: Add your logic here (e.g., display course-specific reviews)
+                    });
+
+                    const addCourseButton = myWindow.document.getElementById("addCourseButton");
+                    addCourseButton.addEventListener("click", function() {
+                        const courseName = prompt("Enter the name of the new course:");
+                        if (courseName) {
+                            // Construct the course data object
+                            const courseData = { name: courseName };
+        
+                            // Make an API call to add the new course
+                            fetch('/courses', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(courseData)
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Optionally, re-populate the course dropdown to include the new course
+                                    //populateCoursesDropdownInMyWindow(myWindow, professorId);
+                                } else {
+                                    console.error('Error adding course:', response.statusText);
+                                }
+                            })
+                            .catch(error => console.error('Error adding course:', error.message));
+                        }
+                    });
+            };
+            // End of new code for course selection
             } else {
                 console.error("Popup window blocked or not supported by the browser.");
             }
@@ -163,9 +213,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return button;
     }
 
-
-    const nameInput = document.getElementById("nameInput");
-    const addProfessorButton = document.getElementById("addProfessorButton");
+    if (window.location.pathname.endsWith('searchResults.html')) {
+        const nameInput = document.getElementById("nameInput");
+        const addProfessorButton = document.getElementById("addProfessorButton");
 
         // Add a click event listener to the "Add Professor" button
         addProfessorButton.addEventListener("click", async function () {
@@ -198,9 +248,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error adding professor:', error.message);
             }
         });
-    
+    }
 
-    if(window.location.pathname.endsWith('searchResults.html')) {
+    if (window.location.pathname.endsWith('searchResults.html')) {
         const professorsContainer = document.getElementById("professors-container");
         const professorSearchInput = document.getElementById("professor-search");
     
@@ -242,3 +292,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
+// Define the populateCoursesDropdownInMyWindow function (Jeyma's)
+function populateCoursesDropdownInMyWindow(myWindow, professorId) {
+    fetch(`/coursesForProfessor/${professorId}`)
+        .then(response => response.json())
+        .then(courses => {
+            const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
+            courses.forEach(course => {
+                const option = document.createElement("option");
+                option.value = course._id;
+                option.textContent = course.name;
+                courseSelectDropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error fetching courses:", error));
+}

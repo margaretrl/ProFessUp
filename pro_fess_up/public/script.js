@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 });
-                //jeyma's code 
+                //Courses code
                 // Start of code for course selection in myWindow
                 myWindow.onload = function() {
                     // Call to populate the course dropdown
@@ -154,9 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Add event listeners for course selection and adding a new course
                     const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
                     courseSelectDropdown.addEventListener("change", function() {
-                        const selectedCourseId = courseSelectDropdown.value;
-                        // Handle course selection change
-                        // TODO: Add your logic here (e.g., display course-specific reviews)
+                        const selectedCourseName = courseSelectDropdown.options[courseSelectDropdown.selectedIndex].text;
+
                     });
 
                     const addCourseButton = myWindow.document.getElementById("addCourseButton");
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
             };
-            // End of new code for course selection
+            // End of code for course selection
             } else {
                 console.error("Popup window blocked or not supported by the browser.");
             }
@@ -295,10 +294,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Define the populateCoursesDropdownInMyWindow function (Jeyma's)
 function populateCoursesDropdownInMyWindow(myWindow, professorId) {
-    fetch(`/coursesForProfessor/${professorId}`)
+    fetch("/courses")
         .then(response => response.json())
         .then(courses => {
             const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
+            // Clear existing options
+            courseSelectDropdown.innerHTML = '<option value="">Select a course</option>';
             courses.forEach(course => {
                 const option = document.createElement("option");
                 option.value = course._id;

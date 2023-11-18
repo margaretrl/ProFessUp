@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button id="addCourseButton">Add Course</button>
                     </div>    
                 `);
+                populateCoursesDropdownInMyWindow(myWindow, professor._id);
                 const updateButton = myWindow.document.querySelector(".edit-button");
                 updateButton.classList.add("update-button");
                 updateButton.textContent = "Update";

@@ -71,6 +71,7 @@ const cors = require("cors");
 console.log("App listen at port 5000");
 app.use(express.json());
 app.use(cors());
+const path = require("path"); // Make sure to require 'path' module
 app.get("/", (req, resp) => {
  
     resp.send("App is Working");
@@ -387,6 +388,23 @@ app.get('/courses', async (req, res) => {
 
 // Middlewares
 //app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.get('/search-results', function(req, res) {
+    const filePath = path.join(__dirname, '../pro_fess_up/public', 'searchResults.html');
+    
+    console.log(`Request received for /search-results. Serving file: ${filePath}`);
+    
+    res.sendFile(filePath, function(err) {
+        if (err) {
+            console.error(`Error sending file: ${err.message}`);
+            res.status(500).send(err);
+        } else {
+            console.log(`File sent successfully: ${filePath}`);
+        }
+    });
+});
 
 
 const PORT = process.env.PORT || 4000; // backend routing port

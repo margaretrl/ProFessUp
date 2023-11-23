@@ -33,10 +33,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Search Button
+    //var searchButton = document.getElementById('search-click');
     var searchButton = document.querySelector('.search-button');
     if (searchButton) {
         searchButton.addEventListener('click', function() {
             window.location.href = 'searchResults.html';
+           /*// Make a GET request to the /search-results route on the server
+            fetch('/search-results')
+                .then(function(response) {
+                    if (response.ok) {
+                        // Redirect to the search-results page if the response is successful
+                        window.location.href = '/search-results';
+                    } else {
+                        console.error('Error fetching /search-results:', response.statusText);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });*/
         });
     } else {
         console.error('.search-button not found');

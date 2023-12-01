@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Courses.css'; //Path to Courses.css
 
-function Courses() {
+/*function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +33,19 @@ function Courses() {
 
   //Display an error message if there was an error fetching the data
   if (error) return <div className="error">Error: {error}</div>;
+*/
 
+function Courses() {
+  // Mock data to simulate fetched data
+  const mockCourses = [
+    { _id: '1', name: 'Introduction to React' },
+    { _id: '2', name: 'Advanced JavaScript' },
+    { _id: '3', name: 'Web Development Basics' },
+    // Add more mock courses as needed
+  ];
+
+  // Initialize courses state with mock data
+  const [courses, setCourses] = useState(mockCourses);
   //Render the list of courses if there are any, otherwise indicate that there are no courses
   return (
     <div className="courses">

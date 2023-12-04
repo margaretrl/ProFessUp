@@ -226,8 +226,8 @@ app.post('/reviews', async (req, res) => {
             attendance: req.body.attendance,
             textbook: req.body.textbook,
             extraCredit: req.body.extraCredit,
-            professor: req.body.professor
-            //course: req.body.course, // Uncomment when the course table is included lol
+            professor: req.body.professor,
+            course: req.body.course, // Uncomment when the course table is included lol
         });
 
         const newReview = await review.save();

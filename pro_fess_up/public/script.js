@@ -132,8 +132,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select>    
                         <button id="addCourseButton">Add Course</button>
                     </div>    
+                    <div class="professor-reviews">
+                    <h2>Reviews for ${title}</h2>
+                    <div id="reviewsContainer"></div>
+                    </div>
                 `);
+                //displayProfessorReviewsInMyWindow(myWindow, professor._id);
                 populateCoursesDropdownInMyWindow(myWindow, professor._id);
+                displayReviews(myWindow, professor._id);
                 const updateButton = myWindow.document.querySelector(".edit-button");
                 updateButton.classList.add("update-button");
                 updateButton.textContent = "Update";
@@ -163,6 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 //Courses code
                 // Start of code for course selection in myWindow
                 myWindow.onload = function() {
+                    
                     // Call to populate the course dropdown
                     populateCoursesDropdownInMyWindow(myWindow, professor._id);
 
@@ -323,4 +330,51 @@ function populateCoursesDropdownInMyWindow(myWindow, professorId) {
             });
         })
         .catch(error => console.error("Error fetching courses:", error));
+}
+
+// Function to fetch and display professor reviews in the new window
+function displayReviews(myWindow, professorId) {
+    fetch(`/reviews/professor/${professorId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(reviews => {
+            const reviewsContainer = myWindow.document.getElementById("reviewsContainer");
+            reviewsContainer.innerHTML = ''; // Clear any existing content
+
+            reviews.forEach(review => {
+                const reviewDiv = myWindow.document.createElement("div");
+                reviewDiv.classList.add("review");
+                console.log(`Processing review:`, review);
+
+                // Populate reviewDiv with review details
+                reviewDiv.innerHTML = `
+                <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h3 style="color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">Review Details</h3>
+                    <p><strong>Workload:</strong> ${review.workload}</p>
+                    <p><strong>Participation:</strong> ${review.participation ? 'Required' : 'Not Required'}</p>
+                    <p><strong>Pop Quizzes:</strong> ${review.popQuizzes ? 'Yes' : 'No'}</p>
+                    <p><strong>Difficulty:</strong> ${review.difficulty}</p>
+                    <p><strong>Overall Score:</strong> ${review.overallScore}</p>
+                    <p><strong>Group Project:</strong> ${review.groupProject ? 'Yes' : 'No'}</p>
+                    <p><strong>Professor Accessibility:</strong> ${review.professorAccessibility}</p>
+                    <p><strong>Quiz Question Type:</strong> ${review.quizQType}</p>
+                    <p><strong>Anonymous Reviews:</strong> ${review.anonymousReviews ? 'Yes' : 'No'}</p>
+                    <p><strong>Attendance:</strong> ${review.attendance ? 'Required' : 'Not Required'}</p>
+                    <p><strong>Textbook Use:</strong> ${review.textbook ? 'Required' : 'Not Required'}</p>
+                    <p><strong>Extra Credit:</strong> ${review.extraCredit ? 'Available' : 'Not Available'}</p>
+                </div>
+                `;
+                
+
+                reviewsContainer.appendChild(reviewDiv);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching reviews:", error);
+            myWindow.alert("Error fetching reviews: " + error.message);
+        });
 }

@@ -78,6 +78,12 @@
         .form-group { margin-bottom: 20px; }
         .form-group input { width: 300px; padding: 10px; font-size: 16px; }
         .form-group button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        @media (max-width: 600px) {
+            .form-group input {
+                width: 100%;
+            }
+        }
+        
     </style>
 </head>
 
@@ -94,8 +100,25 @@
         </div>
         <div class="form-group">
             <button type="submit">Sign In</button>
+             
+            <form action="/signin" method="post">
+                <div class="form-group">
+                    <!-- Email input -->
+                </div>
+                <div class="form-group">
+                    <!-- Password input -->
+                </div>
+                <div class="form-group">
+                    <button type="submit">Sign In</button>
+                </div>
+            </form>
+
         </div>
+        <div class="content">
+            <!-- Link to Sign Up page -->
+            <p>Don't have an account? <a href="/http://localhost:3001/signup.html">Sign Up</a></p>
+        </div>
+        
     </div>
 </body>
 
-</html>

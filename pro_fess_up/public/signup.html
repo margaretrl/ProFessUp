@@ -30,9 +30,16 @@
             <input type="password" placeholder="Password" required>
         </div>
         <div class="form-group">
-            <button type="submit">Sign Up</button>
+            <button type="submit" onclick="submitForm()">Sign Up</button>
         </div>
-    </div>
+    </form>
+</div>
+
+<script>  // Jada 
+    function submitForm() {
+        window.location.href = 'http://localhost:3000/searchResults.html';
+    }
+</script>
 </body>
 
 </html>

@@ -133,11 +133,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button id="addCourseButton">Add Course</button>
                     </div>    
                     <div class="professor-reviews">
-                    <h2>Reviews for ${title}</h2>
+                    <h2>Overall Score <span id="overallRating">Loading...</span></h2>
+                    <div id="reviewsContainer"></div>
+                    </div>
+                    <div class="professor-reviews">
                     <div id="reviewsContainer"></div>
                     </div>
                 `);
-                //displayProfessorReviewsInMyWindow(myWindow, professor._id);
+                getOverallRatingForProfessor(myWindow, professor._id);
                 populateCoursesDropdownInMyWindow(myWindow, professor._id);
                 displayReviews(myWindow, professor._id);
                 const updateButton = myWindow.document.querySelector(".edit-button");
@@ -344,7 +347,7 @@ function displayReviews(myWindow, professorId) {
         .then(reviews => {
             const reviewsContainer = myWindow.document.getElementById("reviewsContainer");
             reviewsContainer.innerHTML = ''; // Clear any existing content
-
+            //const overallRating = getOverallRatingForProfessor(professorId);
             reviews.forEach(review => {
                 const reviewDiv = myWindow.document.createElement("div");
                 reviewDiv.classList.add("review");
@@ -372,6 +375,25 @@ function displayReviews(myWindow, professorId) {
 
                 reviewsContainer.appendChild(reviewDiv);
             });
+        })
+        .catch(error => {
+            console.error("Error fetching reviews:", error);
+            myWindow.alert("Error fetching reviews: " + error.message);
+        });
+}
+function getOverallRatingForProfessor(myWindow, professorId) {
+    fetch(`/reviews/professor/${professorId}`)
+        .then(response => response.json())
+        .then(reviews => {
+            let overallRating = 0;
+            if (reviews.length > 0) {
+                overallRating = reviews.reduce((acc, review) => acc + (review.overallScore || 0), 0) / reviews.length;
+            }
+            // Update the overall rating display in the window
+            const ratingDisplay = myWindow.document.getElementById("overallRating");
+            if (ratingDisplay) {
+                ratingDisplay.textContent = `Overall Rating: ${overallRating.toFixed(1)}`;
+            }
         })
         .catch(error => {
             console.error("Error fetching reviews:", error);

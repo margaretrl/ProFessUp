@@ -54,7 +54,7 @@
 </head>
 
 <body>
-  <script src="script.js"></script> >   // connect to the script
+  <script src="script.js"></script>
 
     <div class="header">
         <h1>Welcome to ProFessUp</h1>
@@ -70,32 +70,10 @@
             <input type="password" id="password" placeholder="Password" required>
         </div>
         <div class="form-group">
-            <button type="button" onclick="submitForm()">Sign Up</button>
+            <button id="addReviewerButton" type="submit">Sign Up</button>
         </div>
         <div id="errorMessage" class="error-message"></div>
     </div>
-
-    <script>
-        function submitForm() {
-            var fullName = document.getElementById('fullName').value;
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-            var errorMessageElement = document.getElementById('errorMessage');
-
-            // Check if any field is empty
-            if (!fullName || !email || !password) {
-                errorMessageElement.textContent = 'Please fill in fullname,username and password';
-            } else {
-                // Perform the actual form submission here
-                // For simplicity, just display a success message
-                alert('Form submitted successfully!');
-                errorMessageElement.textContent = ''; // Clear any previous error messages
-
-                // Redirect to the searchResults.html page
-                window.location.href = 'http://localhost:3000/searchResults.html';
-            }
-        }
-    </script>
 </body>
 
 </html>

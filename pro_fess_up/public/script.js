@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+
     if (window.location.pathname.endsWith('index.html')) {
         // REVIEW TEST BUTTON - DELETE AFTER
         var reviewButton = document.querySelector('.review-button');
@@ -315,6 +316,57 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    if (window.location.pathname.endsWith('signup.html')) {
+
+        const addReviewerButton = document.getElementById('addReviewerButton');
+        const errorMessageElement = document.getElementById('errorMessage');
+
+        addReviewerButton.addEventListener("click", async function () {
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Check if any field is empty
+            if (!fullName || !email || !password) {
+                errorMessageElement.textContent = 'Please fill in fullname, username and password';
+                return; // Exit the function if validation fails
+            } 
+
+            const reviewerData = {
+                username: email,
+                fullName: fullName,
+                password: password
+            };
+
+            // Make a POST request to the server's /professors endpoint
+            try {
+                const response = await fetch('/reviewers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reviewerData)
+                });
+
+                if (response.ok) {
+                    // Perform the actual form submission here
+                    // For simplicity, just display a success message
+                    alert('Form submitted successfully!');
+                    errorMessageElement.textContent = ''; // Clear any previous error messages
+                    username = "";
+                    fullName = "";
+                    password = "";
+                    // Redirect to the searchResults.html page
+                    window.location.href = 'searchResults.html';
+                    console.log('Reviewer added successfully');
+                } else {
+                    console.error('Error adding reviewer1:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error adding reviewer:', error.message);
+            }
+        });
+    }
 });
 
 // Define the populateCoursesDropdownInMyWindow function (Jeyma's)

@@ -351,13 +351,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     // Perform the actual form submission here
                     // For simplicity, just display a success message
-                    alert('Form submitted successfully!');
                     errorMessageElement.textContent = ''; // Clear any previous error messages
                     username = "";
                     fullName = "";
                     password = "";
                     // Redirect to the searchResults.html page
-                    window.location.href = 'searchResults.html';
+                    window.location.href = '/searchResults.html';
                     console.log('Reviewer added successfully');
                 } else {
                     console.error('Error adding reviewer1:', response.statusText);

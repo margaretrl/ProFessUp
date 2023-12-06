@@ -1,16 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    if (window.location.pathname.endsWith('index.html')) {
-        // REVIEW TEST BUTTON - DELETE AFTER
-        var reviewButton = document.querySelector('.review-button');
-        if (reviewButton) { // Corrected condition
-            reviewButton.addEventListener('click', function() {
-                window.location.href = 'review.html';
-            });
-        } else {
-            console.error('.review-button not found');
-        }
-    }
     
     // Sign In Button
     var signInButton = document.querySelector('.sign-in-button');
@@ -317,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+
 // Define the populateCoursesDropdownInMyWindow function (Jeyma's)
 function populateCoursesDropdownInMyWindow(myWindow, professorId) {
     fetch("/courses")
@@ -400,3 +390,7 @@ function getOverallRatingForProfessor(myWindow, professorId) {
             myWindow.alert("Error fetching reviews: " + error.message);
         });
 }
+
+
+//
+

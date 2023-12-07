@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!email || !password) {
                 errorMessageElement.textContent = 'Please fill in username and password';
                 return; // Exit the function if validation fails
-            } 
+            } //testing coauthor
     
             try {
                 const reviewersResponse = await fetch('/reviewers');

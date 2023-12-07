@@ -1,6 +1,9 @@
+// Initialize variables from session storage
+var reviewerId = sessionStorage.getItem('reviewerId') || null;
+
+
 document.addEventListener('DOMContentLoaded', function() {
-
-
+    console.error('session id:', sessionStorage.getItem('reviewerId') || null);
     
     // Sign In Button
     var signInButton = document.querySelector('.sign-in-button');
@@ -20,6 +23,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } else {
         console.error('.sign-up-button not found');
+    }
+
+    // Sign Out Button
+    var signOutButton = document.querySelector('.sign-out-button');
+    if (signOutButton) {
+        signOutButton.addEventListener('click', function() {
+            sessionStorage.removeItem('reviewerId');
+            window.location.reload();
+        });
+    } else {
+        console.error('.sign-out-button not found');
+    }
+
+    // Check conditions for showing/hiding buttons
+    if(!sessionStorage.getItem('reviewerId')) {
+        if (signInButton) {
+            signInButton.style.visibility = 'visible';
+        }
+        if (signUpButton) {
+            signUpButton.style.visibility = 'visible';
+        }
+        if (signOutButton) {
+            signOutButton.style.visibility = 'hidden';
+        }
+    } else {
+        if (signInButton) {
+            signInButton.style.visibility = 'hidden';
+        }
+        if (signUpButton) {
+            signUpButton.style.visibility = 'hidden';
+        }
+        if (signOutButton) {
+            signOutButton.style.visibility = 'visible';
+        }
     }
 
     // Search Button
@@ -326,35 +363,100 @@ document.addEventListener('DOMContentLoaded', function() {
                 fullName: fullName,
                 password: password
             };
-
-            // Make a POST request to the server's /professors endpoint
+            
             try {
-                const response = await fetch('/reviewers', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(reviewerData)
-                });
+                const reviewersResponse = await fetch('/reviewers');
+                if (reviewersResponse.ok) {
+                    const reviewers = await reviewersResponse.json();
+                    const emailExists = reviewers.some(reviewer => reviewer.username === email);
+        
+                    if (emailExists) {
+                        errorMessageElement.textContent = 'Email already in use. Please use a different email.';
+                        return; // Exit the function if the email already exists
+                    }
+                    else
+                    {
+                        // Make a POST request to the server's /professors endpoint
+                        try {
+                            const response = await fetch('/reviewers', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(reviewerData)
+                            });
 
-                if (response.ok) {
-                    // Perform the actual form submission here
-                    // For simplicity, just display a success message
-                    errorMessageElement.textContent = ''; // Clear any previous error messages
-                    username = "";
-                    fullName = "";
-                    password = "";
-                    // Redirect to the searchResults.html page
-                    window.location.href = '/searchResults.html';
-                    console.log('Reviewer added successfully');
+                            if (response.ok) {
+                                const responseData = await response.json();
+                                sessionStorage.setItem('reviewerId', responseData._id);
+                                // Perform the actual form submission here
+                                // For simplicity, just display a success message
+                                errorMessageElement.textContent = ''; // Clear any previous error messages
+                                // Redirect to the searchResults.html page
+                                window.location.href = '/searchResults.html';
+                                console.log('Reviewer added successfully');
+                            } else {
+                                console.error('Stringified data:', JSON.stringify(reviewerData));
+                                console.error('Error adding reviewer1:', response.statusText, response.status);
+                            }
+                        } catch (error) {
+                            console.error('Error adding reviewer:', error.message);
+                        }
+                    }
                 } else {
-                    console.error('Error adding reviewer1:', response.statusText);
+                    console.error('Error fetching reviewers:', reviewersResponse.statusText);
+                    return; // Exit the function if there's an error fetching reviewers
                 }
             } catch (error) {
-                console.error('Error adding reviewer:', error.message);
+                console.error('Error:', error);
+                return; // Exit the function if there's an error
             }
         });
     }
+
+    if (window.location.pathname.endsWith('signIn.html')) {
+
+        const signInButton = document.getElementById('signInButton');
+        const errorMessageElement = document.getElementById('errorMessage');
+    
+        signInButton.addEventListener("click", async function () {
+            console.error('Error: here');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            // Check if any field is empty
+            if (!email || !password) {
+                errorMessageElement.textContent = 'Please fill in username and password';
+                return; // Exit the function if validation fails
+            } 
+    
+            try {
+                const reviewersResponse = await fetch('/reviewers');
+                if (reviewersResponse.ok) {
+                    const reviewers = await reviewersResponse.json();
+                    const matchingReviewer = reviewers.find(reviewer => reviewer.username === email && reviewer.password === password);
+        
+                    if (matchingReviewer) {
+                        // Set the global variables with the data of the matching reviewer
+                        sessionStorage.setItem('reviewerId', matchingReviewer._id);
+    
+                        // Perform the actual sign-in success actions
+                        errorMessageElement.textContent = ''; // Clear any previous error messages
+                        window.location.href = '/searchResults.html';
+                        console.log('Sign-in successful');
+                    } else {
+                        // No matching reviewer found
+                        errorMessageElement.textContent = 'Invalid username or password';
+                    }
+                } else {
+                    console.error('Error fetching reviewers:', reviewersResponse.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageElement.textContent = 'An error occurred during sign-in';
+            }
+        });
+    }    
 });
 
 

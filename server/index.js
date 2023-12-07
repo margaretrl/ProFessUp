@@ -108,17 +108,25 @@ app.get('/reviewers/:id', async (req, res) => {
 // POST (NEW) Reviewer
 app.post('/reviewers', async (req, res) => {
     try {
+        const { username, fullName, password } = req.body;
+        console.error('username:', username);
+        console.error('fullName:', fullName),
+        console.error('password:', password);
+        if(!username || !fullName || !password)
+        {
+          return res.status(400).send({ message: 'User data is required'});
+        }
         const newReviewer = new Reviewers({
-            username: req.body.username,
-            fullName: req.body.fullName,
-            password: req.body.password // Remember to hash passwords in production!
+            username: username,
+            fullName: fullName,
+            password: password // Remember to hash passwords in production!
         });
 
         // Save the new Reviewer to the database
-        const savedReviewer = await newReviewer.save();
+        await newReviewer.save();
 
         // Send back the created Reviewer data with a 201 status code (Created)
-        res.status(201).json(savedReviewer);
+        res.status(201).json(newReviewer);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

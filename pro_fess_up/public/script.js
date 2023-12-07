@@ -156,7 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <select id="courseSelectDropdown">
                             <option value="">Select a course</option>
                             <!-- Course options will be added here -->
-                        </select>    
+                        </select> 
+                        <input type="text" id="courseNameInput" placeholder="Enter course name" />   
                         <button id="addCourseButton">Add Course</button>
                     </div>    
                     <div class="professor-reviews">
@@ -210,33 +211,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     });
 
-                    const addCourseButton = myWindow.document.getElementById("addCourseButton");
-                    addCourseButton.addEventListener("click", function() {
-                        const courseName = prompt("Enter the name of the new course:");
-                        if (courseName) {
-                            // Construct the course data object
-                            const courseData = { name: courseName };
+                    const addCourseButton = myWindow.document.getElementById('addCourseButton');
+                    const courseNameInput = myWindow.document.getElementById('courseNameInput');
+                    addCourseButton.addEventListener("click", async function() {
+                        const courseName = courseNameInput.value;
+                        
+                        // Construct the course data object
+                        const courseData = { name: courseName };
         
-                            // Make an API call to add the new course
-                            fetch('/courses', {
+                        // Make a POST request to the server's /courses endpoint
+                        try {
+                            const response = await fetch('/courses', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify(courseData)
-                            })
-                            .then(response => {
-                                if (response.ok) {
-                                    // Optionally, re-populate the course dropdown to include the new course
-                                    //populateCoursesDropdownInMyWindow(myWindow, professorId);
-                                } else {
-                                    console.error('Error adding course:', response.statusText);
-                                }
-                            })
-                            .catch(error => console.error('Error adding course:', error.message));
-                        }
+                            });
+
+                            if (response.ok) {
+                                courseNameInput.value = ""; // Clear the input field
+                                console.log('Course added successfully');
+                                // Optionally, refresh the courses dropdown
+                            } else {
+                                console.error('Error adding course:', response.statusText);
+                            }
+                        } catch (error) {
+                            console.error('Error adding course:', error.message);
+                        }    
+                        
                     });
-            };
+                };
             // End of code for course selection
             } else {
                 console.error("Popup window blocked or not supported by the browser.");

@@ -1,43 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <title>ProFessUp Landing Page</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white; /* Updated overall background color */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #9CD3D9; /* Updated banner color */
+            color: white;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        .signin-link,
+        .signup-link {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .signin-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .signup-link {
+            background-color: #B7Bf7A; /* Orange color for Sign Up button */
+        }
+
+        .signup-link:hover {
+            background-color: rgba(255, 87, 34, 0.8);
+        }
+
+        .search-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #B7Bf7A; /* Updated button color */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        
+        .social-icons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .social-icons a {
+            text-decoration: none;
+            color: #B7Bf7A; /* Color for social icons */
+            margin-left: 10px;
+        }
+
+        .social-icons a:hover {
+            color: #FF5722; /* Updated color on hover */
+        }
+        
+        body { font-family:Georgia, 'Times New Roman', Times, serif New Roman; background-color: #f5f5f5; margin: 0; padding: 0; }
+        .header { background-color: #28a745; color: white; padding: 50px; text-align: center; }
+        .content { margin: 20px; display: flex; flex-direction: column; align-items: center; }
+        .feature { margin: 20px; text-align: center; }
+        .search-bar {margin-top: 20px; display: flex; justify-content: center; align-items: center; }
+        .search-input { padding: 10px; width: 300px; font-size: 16px; }
+        .search-button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        .sign-in-button, .sign-up-button, .sign-out-button { margin-top: 20px; padding: 8px 16px; font-size: 14px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100px; margin-left: auto; margin-right: auto;}   
+        .sign-in-button, .sign-up-button, sign-out-button { margin-top: 20px; padding: 8px 16px; font-size: 14px; background-color: #007bff; color: white; border: none; cursor: pointer; width: 100px; margin-left: auto; margin-right: auto;} 
+        .social-icons {margin-left: auto; margin-right: auto; width: 100px; font-size: 24px;}
+        .logo-container img { max-width: 150px; height: auto;}
+    </style>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+</head>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+<body>
+    <div class="header">
+        <h1>Welcome to ProFessUp</h1>
+        <p>Find the best professors and courses at your university</p>
+        <div class="search-bar">
+            <div class="search-button" onclick="window.location.href='/searchResults.html'">Search for a Professor</div>
+        </div>
+    </main>
+        <p> ProFessUp allows you to search for professors and 
+            courses based on real student reviews.</p>
+        <p> Make informed decisions about your education.</p>
+        <div class="sign-in-button"onclick="window.location.href='/signIn'">Sign In</div>
+        <div class="sign-up-button"onclick="window.location.href='/signup'">Sign Up</div>
+        <div class="sign-out-button">Sign Out</div>
+    </div>
+    <div class="content">
+        <div class="feature">
+            <div class="logo-container">
+                <img src="/testlogo.png" alt="Logo 1">
+                <img src="/test2.png" alt="Logo 2">
+            </div>
+            <h3>A Safe and Efficient Platform</h3>
+            <p>More Than A Million Users Trust ProFessUp To Manage Their Educational Needs.</p>
+        </div>
+    </div>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+    <footer>
+        <div class="social-icons">
+            <a href="#" class="fab fa-instagram"></a>
+            <a href="#" class="fab fa-twitter"></a>
+            <a href="#" class="fab fa-facebook"></a>
+            <a href="#" class="fab fa-snapchat"></a>
+        </div>
+       
+    </footer>
+    
+    <script type="module" src="script.js"></script>
+</body>
 </html>

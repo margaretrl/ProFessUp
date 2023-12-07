@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProfFessUp - Product Comparison with Reviewer Notes</title>
+   <header></header>
+   
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background-color: #28a745;
+      color: white;
+  } 
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .comparison-table th {
+      background-color: #4caf50; /* Green */
+      color: #ffffff; /* White */
+    }
+
+    .comparison-table td {
+      background-color: #e0f2f1; /* Light Green */
+    }
+
+    .filter-container {
+      margin-bottom: 20px;
+    }
+
+    .filter-container select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    label {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .professor-columns td {
+      background-color: #81c784; /* Light Green for Professor Columns */
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <h1>ProfFessUp</h1>
+
+  <div class="filter-container">
+    <label for="rating-filter">Filter by Courses:</label>
+    <select id="rating-filter" onchange="filterProducts()">
+      <option value="all">Courses</option>
+    </select>
+    <button onclick="addCourseOption()">Add Course</button>
+  </div>
+
+  <div class="column-selection">
+    <label>Select Columns:</label>
+    <input type="checkbox" class="column-checkbox" data-column="professor-columns" id="professor-name-checkbox" checked>
+    <label for="professor-name-checkbox">Professor Name</label>
+    <input type="checkbox" class="column-checkbox" data-column="attendance-required professor-columns" id="attendance-required-checkbox" checked>
+    <label for="attendance-required-checkbox">Attendance Required</label>
+    <input type="checkbox" class="column-checkbox" data-column="professor-columns" id="group-project-checkbox" checked>
+    <label for="group-project-checkbox">Group Project</label>
+    <input type="checkbox" class="column-checkbox" data-column="professor-columns" id="extra-credit-checkbox" checked>
+    <label for="extra-credit-checkbox">Extra Credit</label>
+  </div>
+
+  <table class="comparison-table">
+    <tr>
+      <th class="professor-columns">Professor Name</th>
+      <th>Rating</th>
+      <th>Attribute</th>
+      <th>Overall Score</th>
+      <th>Attendance</th>
+      <th>Reviewer Note</th>
+      <th class="attendance-required professor-columns">Attendance Required</th>
+      <th class="professor-columns">Group Project</th>
+      <th class="professor-columns">Extra Credit</th>
+    </tr>
+    <tr>
+      <td class="professor-columns">Prof. Smith</td>
+      <td>5 Stars</td>
+      <td>Red</td>
+      <td>8.5</td>
+      <td>95%</td>
+      <td>Excellent quality</td>
+      <td class="attendance-required professor-columns">Yes</td>
+      <td class="professor-columns">No</td>
+      <td class="professor-columns">Yes</td>
+    </tr>
+    <tr>
+      <td class="professor-columns">Prof. Johnson</td>
+      <td>4 Stars</td>
+      <td>Blue</td>
+      <td>7.2</td>
+      <td>88%</td>
+      <td>Comfortable fit</td>
+      <td class="attendance-required professor-columns">Yes</td>
+      <td class="professor-columns">Yes</td>
+      <td class="professor-columns">No</td>
+    </tr>
+    <tr>
+      <td class="professor-columns">Prof. Lee</td>
+      <td>3 Stars</td>
+      <td>Green</td>
+      <td>6.0</td>
+      <td>75%</td>
+      <td>Decent for the price</td>
+      <td class="attendance-required professor-columns">No</td>
+      <td class="professor-columns">Yes</td>
+      <td class="professor-columns">Yes</td>
+    </tr>
+    <!-- Add more products and reviewer notes as needed -->
+  </table>
+
+  <script>
+    function addCourseOption() {
+      var courseName = prompt("Enter the name of the new course:");
+      if (courseName) {
+        var filter = document.getElementById('rating-filter');
+        var optionElement = document.createElement('option');
+        optionElement.value = courseName;
+        optionElement.text = courseName;
+        filter.appendChild(optionElement);
+      }
+    }
+
+    function filterProducts() {
+      var selectedRating = document.getElementById('rating-filter').value;
+      var selectedAttribute = document.getElementById('attribute-filter').value;
+      var products = document.querySelectorAll('.comparison-table tr');
+
+      products.forEach(function(product, index) {
+        if (index > 0) { // Skip the header row
+          var rating = product.children[1].innerText.charAt(0);
+          var attribute = product.children[2].innerText.toLowerCase();
+
+          var ratingMatch = (selectedRating === 'all' || rating === selectedRating);
+          var attributeMatch = (selectedAttribute === 'all' || attribute === selectedAttribute);
+
+          if (ratingMatch && attributeMatch) {
+            product.style.display = 'table-row';
+          } else {
+            product.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    function toggleColumnVisibility() {
+      var checkboxes = document.getElementsByClassName('column-checkbox');
+      var columns = document.querySelectorAll('.comparison-table th, .comparison-table td');
+
+      var anyColumnSelected = false;
+
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+          anyColumnSelected = true;
+          break;
+        }
+      }
+
+      if (anyColumnSelected) {
+        for (var i = 0; i < columns.length; i++) {
+          columns[i].style.display = 'table-cell';
+        }
+
+        for (var i = 0; i < checkboxes.length; i++) {
+          var columnId = checkboxes[i].getAttribute('data-column');
+          var columnsToToggle = document.querySelectorAll('.' + columnId);
+
+          if (!checkboxes[i].checked) {
+            for (var j = 0; j < columnsToToggle.length; j++) {
+              columnsToToggle[j].style.display = 'none';
+            }
+          }
+        }
+      } else {
+        alert('At least one column must be selected.');
+        checkboxes[0].checked = true; // Revert the selection
+      }
+    }
+
+    var checkboxes = document.getElementsByClassName('column-checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].addEventListener('change', toggleColumnVisibility);
+    }
+
+
+
+  </script>
+</body>
+</html>

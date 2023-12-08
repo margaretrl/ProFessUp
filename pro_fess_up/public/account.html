@@ -42,6 +42,7 @@
             align-items: center;
             flex-direction: column;
             padding: 20px;
+            margin-top: 9%;
         }
 
         .account-field {
@@ -76,15 +77,12 @@
         .edit-button {
             background-color: #28a745;
             font-size: 16px;
-            display:inline-flex;
-            justify-items: end;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
-        .edit-buttons {
-            margin-top: 3vw;
-            margin-bottom: 2vw;
-            margin-left: 70%;
+            display: block;
+            margin-left: auto;
+            margin-right: 2%;
+            text-wrap:nowrap;
+            margin-bottom: 28px;
+            padding: 6px 18px;
         }
         .right-side {
             margin-left: 0%;
@@ -104,6 +102,14 @@
             font-weight: bold;
             cursor:pointer;
         }
+
+        .first-button {
+            margin-top: 40px
+        }
+        .edit-buttons-container {
+            position: absolute; 
+            right: 3%;
+        }
     </style>
 </head>
 
@@ -118,9 +124,11 @@
         </div>
     </div>
     <!-- Edit Button -->
-    <button class="edit-button edit-buttons" id="editButton">Edit</button>
-    <button class="edit-button" id="editPasswordButton">Edit Password</button>
-    <button class="edit-button" id="deleteButton">Delete Account</button>
+    <div class="edit-buttons-container">
+        <button class="edit-button first-button" id="editButton">Edit</button>
+        <button class="edit-button" id="editPasswordButton">Edit Password</button>
+        <button class="edit-button" id="deleteButton">Delete Account</button>
+    </div>
     <div class="account-container">
         <!-- Username (Email) Field -->
         <div class="account-field">

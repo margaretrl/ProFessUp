@@ -93,13 +93,16 @@ app.get('/reviewers', async (req, res) => {
 
 // GET one reviewer
 app.get('/reviewers/:id', async (req, res) => {
+    const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
     try {
-        const reviewer = await Reviewer.findById(req.params.id);
-        if (reviewer) {
-            res.json(reviewer);
-        } else {
-            res.status(404).json({ message: 'Reviewer not found' });
-        }
+        const reviewer = await Reviewers.findById(id);
+        if (!reviewer) {
+          return res.status(404).json({ message: 'Reviewer not found' });
+        } 
+        res.json(reviewer);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

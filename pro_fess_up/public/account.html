@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="path/to/your/styles.css">
+    <title>Account - ProFessUp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sign-in-button, .sign-up-button, .sign-out-button, .account-button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px; 
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .header > div {
+            display: flex;
+            align-items: center;
+        }
+        .account-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .account-field {
+            margin-bottom: 10px;
+            width: 100%; /* Full width within the container */
+            display: flex;
+            justify-content: center; /* Center the contents of account-field */
+            align-items: center;
+            flex-direction: column; /* Change to column */
+        }
+        .label {
+            font-weight: bold;
+        }
+        .input-field {
+            width: 300px;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .edit-button, .submit-button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block; 
+            width: auto;
+            justify-content: center;
+            align-items: center;
+        }
+        .edit-button {
+            background-color: #28a745;
+            font-size: 16px;
+            display:inline-flex;
+            justify-items: end;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .edit-buttons {
+            margin-top: 3vw;
+            margin-bottom: 2vw;
+            margin-left: 70%;
+        }
+        .right-side {
+            margin-left: 0%;
+            white-space: nowrap;
+        }
+        .error-message {
+            color: red;
+        }
+
+        .prof-search-button { 
+            font-family: Arial, sans-serif; 
+            color: white; 
+            margin: 0; 
+            padding: 0; 
+            background-color: transparent; 
+            font-size: 30px;
+            font-weight: bold;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="prof-search-button" onclick="window.location.href='/searchResults.html'">ProFessUp</div>
+        <div>
+            <div class="sign-in-button right-side" onclick="window.location.href='/signIn'">Sign In</div>
+            <div class="sign-up-button" onclick="window.location.href='/signup'">Sign Up</div>
+            <div class="sign-out-button right-side">Sign Out</div>
+            <div class="account-button" onclick="window.location.href='/account'">Account</div>
+        </div>
+    </div>
+    <!-- Edit Button -->
+    <button class="edit-button edit-buttons" id="editButton">Edit</button>
+    <button class="edit-button" id="editPasswordButton">Edit Password</button>
+    <button class="edit-button" id="deleteButton">Delete Account</button>
+    <div class="account-container">
+        <!-- Username (Email) Field -->
+        <div class="account-field">
+            <div class="label">Username (Email):</div>
+            <input type="email" id="userEmail" class="input-field" disabled>
+        </div>
+        
+        <!-- Full Name Field -->
+        <div class="account-field">
+            <div class="label">Full Name:</div>
+            <input type="text" id="userFullName" class="input-field" disabled>
+        </div>
+        
+        <!-- Password Field -->
+        <div class="account-field">
+            <div class="label">Password:</div>
+            <input type="password" id="userPassword" class="input-field" disabled>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="submit-button" id="submitButton">Submit</button>
+        <div id="errorMessage" class="error-message"></div>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

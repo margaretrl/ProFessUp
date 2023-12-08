@@ -30,32 +30,91 @@ document.addEventListener('DOMContentLoaded', function() {
     if (signOutButton) {
         signOutButton.addEventListener('click', function() {
             sessionStorage.removeItem('reviewerId');
-            window.location.reload();
+            if (window.location.pathname.endsWith('account.html'))
+            {
+                window.location.href = '/searchResults.html';
+            }
+            else
+                window.location.reload();
         });
     } else {
         console.error('.sign-out-button not found');
+    }
+
+    // Sign In Button
+    var accountButton = document.querySelector('.account-button');
+    if (accountButton) {
+        accountButton.addEventListener('click', function() {
+            window.location.href = 'account.html';
+            console.error('_id:', sessionStorage.getItem('reviewerId'));
+        });
+    } else {
+        console.error('.account-button not found');
+    }
+
+    if (window.location.pathname.endsWith('account.html'))
+    {
+        var deleteButton = document.getElementById("deleteButton");
+        deleteButton.addEventListener("click", async function () {
+            if (!reviewerId) {
+                alert('Error: No user ID provided.');
+                return;
+            }
+            if (confirm('Are you sure you want to delete this user?')) {
+                 try {
+                    const response = await fetch(`/reviewers/${reviewerId}`, {
+                        method: "DELETE",
+                    });
+        
+                    if (response.ok) {
+                        alert('User deleted successfully.');
+                        sessionStorage.removeItem('reviewerId');
+                        window.location.href = '/searchResults.html';
+                    } else {
+                        console.error("Error deleting professor1:", response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error deleting professor2:", error);
+                }
+            }
+            
+        });
     }
 
     // Check conditions for showing/hiding buttons
     if(!sessionStorage.getItem('reviewerId')) {
         if (signInButton) {
             signInButton.style.visibility = 'visible';
+            signInButton.style.display = 'block';
         }
         if (signUpButton) {
             signUpButton.style.visibility = 'visible';
+            signUpButton.style.display = 'block';
         }
         if (signOutButton) {
             signOutButton.style.visibility = 'hidden';
+            signOutButton.style.display = 'none';
+        }
+        if (accountButton) {
+            accountButton.style.visibility = 'hidden';
+            accountButton.style.display = 'none';
         }
     } else {
         if (signInButton) {
             signInButton.style.visibility = 'hidden';
+            signInButton.style.display = 'none';
         }
         if (signUpButton) {
             signUpButton.style.visibility = 'hidden';
+            signUpButton.style.display = 'none';
         }
         if (signOutButton) {
             signOutButton.style.visibility = 'visible';
+            signOutButton.style.display = 'block';
+        }
+        if (accountButton) {
+            accountButton.style.visibility = 'visible';
+            accountButton.style.display = 'block';
         }
     }
 
@@ -65,19 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchButton) {
         searchButton.addEventListener('click', function() {
             window.location.href = 'searchResults.html';
-           /*// Make a GET request to the /search-results route on the server
-            fetch('/search-results')
-                .then(function(response) {
-                    if (response.ok) {
-                        // Redirect to the search-results page if the response is successful
-                        window.location.href = '/search-results';
-                    } else {
-                        console.error('Error fetching /search-results:', response.statusText);
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });*/
         });
     } else {
         console.error('.search-button not found');
@@ -398,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // For simplicity, just display a success message
                                 errorMessageElement.textContent = ''; // Clear any previous error messages
                                 // Redirect to the searchResults.html page
-                                window.location.href = '/searchResults.html';
+                                window.location.href='/searchResults.html';
                                 console.log('Reviewer added successfully');
                             } else {
                                 console.error('Stringified data:', JSON.stringify(reviewerData));
@@ -447,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
                         // Perform the actual sign-in success actions
                         errorMessageElement.textContent = ''; // Clear any previous error messages
-                        window.location.href = '/searchResults.html';
+                        window.location.href='/searchResults.html';
                         console.log('Sign-in successful');
                     } else {
                         // No matching reviewer found
@@ -462,6 +508,101 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }    
+    if (window.location.pathname.endsWith('account.html')) {
+        if(!sessionStorage.getItem('reviewerId'))
+        {
+            window.location.href = 'searchResults.html';
+        }
+        var userPasswordField = document.getElementById('userPassword');
+        userPasswordField.type = 'password';
+        const errorMessageElement = document.getElementById('errorMessage');
+        var submitButton = document.getElementById('submitButton');
+        submitButton.style.visibility = 'hidden';
+        errorMessageElement.textContent = "";
+        fetchAndFillUserData();
+        var editButton = document.getElementById('editButton');
+        if (editButton) {
+            editButton.addEventListener('click', function() {
+                // Enable the username and full name fields for editing
+                var userEmailField = document.getElementById('userEmail');
+                var userFullNameField = document.getElementById('userFullName');
+                if (userEmailField) userEmailField.disabled = false;
+                if (userFullNameField) userFullNameField.disabled = false;
+                submitButton.style.visibility = 'visible';
+            });
+        } else {
+            console.error('#editButton not found');
+        }
+
+        var editPasswordButton = document.getElementById('editPasswordButton');
+        if (editPasswordButton) {
+            editPasswordButton.addEventListener('click', function() {
+                // Prompt the user to enter their password
+                var password = window.prompt("Please enter your password to edit:");
+
+                // Check if a password was entered
+                if (password !== null && password !== "") {
+                    // Enable the password field for editing
+                    if(password == userPasswordField.value)
+                    {
+                        if (userPasswordField) userPasswordField.disabled = false;
+                        submitButton.style.visibility = 'visible';
+                        errorMessageElement.textContent = "";
+                        userPasswordField.type = 'text';
+                    }
+                    else
+                        errorMessageElement.textContent = "Invalid password, please try again.";
+                }
+            });
+        } else {
+            console.error('#editPasswordButton not found');
+        }
+
+        if (submitButton) {
+            submitButton.addEventListener('click', async function() {
+                var userEmail = document.getElementById('userEmail').value;
+                var userFullName = document.getElementById('userFullName').value;
+                var userPassword = document.getElementById('userPassword').value;
+    
+                // Construct the data object to send
+                var data = {
+                    username: userEmail,
+                    fullName: userFullName,
+                    password: userPassword // Ensure you handle password updates securely
+                };
+    
+                try {
+                    const response = await fetch(`/reviewers/${reviewerId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+    
+                    if (response.ok) {
+                        console.log('Reviewer updated successfully');
+                        // Handle successful update here, e.g., display a success message
+                        var userEmailField = document.getElementById('userEmail');
+                        var userFullNameField = document.getElementById('userFullName');
+                        var userPasswordField = document.getElementById('userPassword');
+                        if (userEmailField) userEmailField.disabled = true;
+                        if (userFullNameField) userFullNameField.disabled = true;
+                        if (userPasswordField) userPasswordField.disabled = true;
+                        userPasswordField.type = 'password';
+                    } else {
+                        console.error('Failed to update reviewer:', response.statusText);
+                        // Handle errors here, e.g., display an error message
+                    }
+                } catch (error) {
+                    console.error('Error during update:', error);
+                    // Handle errors here, e.g., display an error message
+                }
+            });
+        } else {
+            console.error('#submitButton not found');
+        }
+    }
 });
 
 
@@ -547,6 +688,31 @@ function getOverallRatingForProfessor(myWindow, professorId) {
             console.error("Error fetching reviews:", error);
             myWindow.alert("Error fetching reviews: " + error.message);
         });
+}
+
+async function fetchAndFillUserData() {
+    if (reviewerId) {
+        try {
+            const response = await fetch(`/reviewers/${reviewerId}`);
+            if (response.ok) {
+                const reviewer = await response.json();
+                // Autofill the input fields with the retrieved data
+                document.getElementById('userEmail').value = reviewer.username || '';
+                console.error('username:', reviewer.username);
+                document.getElementById('userFullName').value = reviewer.fullName || '';
+                console.error('fullName:', reviewer.fullName);
+
+                // Since the actual password should not be sent from the server,
+                // you can use a placeholder (like asterisks) to indicate a password is set
+                document.getElementById('userPassword').value = reviewer.password; // Placeholder for password
+                console.error('password:', reviewer.password);
+            } else {
+                console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+            }
+        } catch (error) {
+            console.error('Error fetching reviewer data:', error);
+        }
+    }
 }
 
 

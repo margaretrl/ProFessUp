@@ -303,6 +303,20 @@ document.addEventListener('DOMContentLoaded', function() {
             //ADD REVIEW CONTAINER DYNAMIC ALLOCATION & LOGIC
             const addReviewContainer = document.querySelector('.add-review-container');
             addReviewContainer.style.border = '8px solid #28a745';
+
+            //error message when not logged in
+            if(!sessionStorage.getItem('reviewerId'))
+            {
+                const errorMessage = document.createElement('span');
+                errorMessage.style.color = 'red';
+                errorMessage.textContent = "Please login first to write a review";
+                errorMessage.style.display = 'flex';
+                errorMessage.style.justifyContent = 'center';
+                errorMessage.style.alignItems = 'center';
+                addReviewContainer.appendChild(errorMessage);
+                addReviewContainer.appendChild(document.createElement('br'));
+                
+            }
             //name field (reviewer name)
             const fullNameLabel = document.createElement('span');
             fullNameLabel.style.marginBottom = '3%';
@@ -316,8 +330,24 @@ document.addEventListener('DOMContentLoaded', function() {
             fullNameInput.classList.add('review-input');
             fullNameInput.style.marginBottom = '3%';
             fullNameInput.style.marginTop = '2.5%';
-            fullNameInput.style.marginRight = '25%';
+            fullNameInput.style.marginRight = '15%';
+            fullNameInput.disabled = true;
             addReviewContainer.appendChild(fullNameInput);
+            if(sessionStorage.getItem('reviewerId'))
+            {
+                try {
+                    const response = await fetch(`/reviewers/${sessionStorage.getItem('reviewerId')}`);
+                    if (response.ok) {
+                        const reviewer = await response.json();
+                        fullNameInput.value = reviewer.fullName || '';
+                        console.error('fullName:', reviewer.fullName);
+                    } else {
+                        console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+                    }
+                } catch (error) {
+                    console.error('Error fetching reviewer data:', error);
+                }
+            }
 
             //course dropdown
             const courseLabel = document.createElement('span');
@@ -331,13 +361,20 @@ document.addEventListener('DOMContentLoaded', function() {
             courseDropdown.classList.add('review-select'); // Add your desired class for styling
             // Add options to the dropdown
             const courses = ['Course 1', 'Course 2', 'Course 3']; // Replace with actual course names
-            courses.forEach(course => {
-            const option = document.createElement('option');
-            option.value = course;
-            option.textContent = course;
-            courseDropdown.appendChild(option);
-            });
-            courseDropdown.style.marginRight = '25%';
+            fetch("/courses")
+            .then(response => response.json())
+            .then(courses => {
+                // Clear existing options
+                courseDropdown.innerHTML = '<option value="">Select a course</option>';
+                courses.forEach(course => {
+                    const option = document.createElement("option");
+                    option.value = course._id;
+                    option.textContent = course.name;
+                    courseDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching courses:", error));
+            courseDropdown.style.marginRight = '15%';
             addReviewContainer.appendChild(courseDropdown);
 
             //anonymous review toggle
@@ -522,7 +559,67 @@ document.addEventListener('DOMContentLoaded', function() {
             addReviewButton.style.backgroundColor = '#007bff';
             addReviewButton.style.color = 'white';
             addReviewButton.style.border = 'none';
-            addReviewButton.style.cursor = 'pointer';
+            if(!sessionStorage.getItem('reviewerId'))
+                addReviewButton.disabled = true;
+            else
+                addReviewButton.style.cursor = 'pointer';
+            addReviewButton.addEventListener('click', async function() {
+                if (!sessionStorage.getItem('reviewerId')) {
+                    alert('Please log in to add a review.');
+                    return;
+                }
+            
+                // Gather data from the form
+                const reviewData = {
+                    reviewer: sessionStorage.getItem('reviewerId'),
+                    professor: professor._id,
+                    fullName: fullNameInput.value, // This seems like additional data not in your schema
+                    course: courseDropdown.value || undefined, // If no course is selected, send undefined
+                    anonymousReviews: anonymousReviewToggle.checked,
+                    professorAccessibility: parseInt(professorAccessibilitySlider.value),
+                    workload: parseInt(workloadSlider.value),
+                    difficulty: parseInt(difficultySlider.value),
+                    overallScore: parseInt(overallScoreSlider.value),
+                    textbook: textbookRequiredToggle.checked,
+                    participation: participationToggle.checked,
+                    attendance: attendanceToggle.checked,
+                    groupProject: groupProjectToggle.checked,
+                    extraCredit: extraCreditToggle.checked,
+                    popQuizzes: popQuizzesToggle.checked,
+                    quizQType: document.querySelector('input[name="quizQType"]:checked').value
+                };
+                console.error('review data1', JSON.stringify(reviewData));
+            
+                // Make a POST request to add the review
+                try {
+                    const response = await fetch('/reviews', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(reviewData)
+                    });
+            
+                    if (response.ok) {
+                        //reset dropdown, toggles, and sliders
+                        courseDropdown.selectedIndex = 0;
+                        document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
+                            radio.checked = false;
+                        });
+                        [anonymousReviewToggle, textbookRequiredToggle, participationToggle, attendanceToggle, groupProjectToggle, extraCreditToggle, popQuizzesToggle].forEach(toggle => {
+                            toggle.checked = false;
+                        });
+                        [professorAccessibilitySlider, workloadSlider, difficultySlider, overallScoreSlider].forEach(slider => {
+                            slider.value = slider.min; // Resets to the minimum value
+                        });
+                    } else {
+                        console.error('review data', JSON.stringify(reviewData));
+                        console.error('Failed to add review:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error during adding review:', error);
+                }
+            });
             addReviewContainer.appendChild(addReviewButton);
 
         });
@@ -947,7 +1044,4 @@ async function fetchAndFillUserData() {
         }
     }
 }
-
-
-//
 

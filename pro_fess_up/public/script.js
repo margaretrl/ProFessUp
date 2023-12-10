@@ -191,7 +191,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             color: white;
                             border: none;
                             cursor: pointer;
-                        }           
+                        }  
+                        .add-review-container {
+                            font-family: Arial, sans-serif;
+                            align-items: center;
+                            font-size: 20px;
+                        }         
                     </style>
                     <div class="prof-data">
                         <h1>${title}</h1>
@@ -212,6 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="professor-reviews">
                     <div id="reviewsContainer"></div>
+                    </div>
+                    <div class="add-review-container">
                     </div>
                 `);
                 getOverallRatingForProfessor(myWindow, professor._id);
@@ -292,6 +299,329 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 console.error("Popup window blocked or not supported by the browser.");
             }
+
+            //ADD REVIEW CONTAINER DYNAMIC ALLOCATION & LOGIC
+            const addReviewContainer = document.querySelector('.add-review-container');
+            addReviewContainer.style.border = '8px solid #28a745';
+
+            //error message when not logged in
+            if(!sessionStorage.getItem('reviewerId'))
+            {
+                const errorMessage = document.createElement('span');
+                errorMessage.style.color = 'red';
+                errorMessage.textContent = "Please login first to write a review";
+                errorMessage.style.display = 'flex';
+                errorMessage.style.justifyContent = 'center';
+                errorMessage.style.alignItems = 'center';
+                addReviewContainer.appendChild(errorMessage);
+                addReviewContainer.appendChild(document.createElement('br'));
+                
+            }
+            //name field (reviewer name)
+            const fullNameLabel = document.createElement('span');
+            fullNameLabel.style.marginBottom = '3%';
+            fullNameLabel.style.marginTop = '2.5%';
+            fullNameLabel.style.marginLeft = '1.5%';
+            fullNameLabel.textContent = 'Full Name: ';
+            addReviewContainer.appendChild(fullNameLabel);
+            const fullNameInput = document.createElement('input');
+            fullNameInput.setAttribute('type', 'text');
+            fullNameInput.setAttribute('placeholder', 'Full Name');
+            fullNameInput.classList.add('review-input');
+            fullNameInput.style.marginBottom = '3%';
+            fullNameInput.style.marginTop = '2.5%';
+            fullNameInput.style.marginRight = '15%';
+            fullNameInput.disabled = true;
+            addReviewContainer.appendChild(fullNameInput);
+            if(sessionStorage.getItem('reviewerId'))
+            {
+                try {
+                    const response = await fetch(`/reviewers/${sessionStorage.getItem('reviewerId')}`);
+                    if (response.ok) {
+                        const reviewer = await response.json();
+                        fullNameInput.value = reviewer.fullName || '';
+                        console.error('fullName:', reviewer.fullName);
+                    } else {
+                        console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+                    }
+                } catch (error) {
+                    console.error('Error fetching reviewer data:', error);
+                }
+            }
+
+            //course dropdown
+            const courseLabel = document.createElement('span');
+            courseLabel.textContent = 'Course: ';
+            courseLabel.style.marginBottom = '3%';
+            courseLabel.style.marginTop = '2.5%';
+            addReviewContainer.appendChild(courseLabel);
+            const courseDropdown = document.createElement('select');
+            courseDropdown.style.marginBottom = '3%';
+            courseDropdown.style.marginTop = '2.5%';
+            courseDropdown.classList.add('review-select'); // Add your desired class for styling
+            // Add options to the dropdown
+            const courses = ['Course 1', 'Course 2', 'Course 3']; // Replace with actual course names
+            fetch("/courses")
+            .then(response => response.json())
+            .then(courses => {
+                // Clear existing options
+                courseDropdown.innerHTML = '<option value="">Select a course</option>';
+                courses.forEach(course => {
+                    const option = document.createElement("option");
+                    option.value = course._id;
+                    option.textContent = course.name;
+                    courseDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Error fetching courses:", error));
+            courseDropdown.style.marginRight = '15%';
+            addReviewContainer.appendChild(courseDropdown);
+
+            //anonymous review toggle
+            const anonymousReviewLabel = document.createElement('span');
+            anonymousReviewLabel.style.marginBottom = '3%';
+            anonymousReviewLabel.style.marginTop = '2.5%';
+            anonymousReviewLabel.textContent = 'Anonymous review: ';
+            addReviewContainer.appendChild(anonymousReviewLabel);
+            const anonymousReviewToggle = document.createElement('input');
+            anonymousReviewToggle.style.marginBottom = '3%';
+            anonymousReviewToggle.style.marginTop = '2.5%';
+            anonymousReviewToggle.setAttribute('type', 'checkbox');
+            anonymousReviewToggle.classList.add('review-checkbox');
+            addReviewContainer.appendChild(anonymousReviewToggle);
+            addReviewContainer.appendChild(document.createElement('br'));
+
+            //professor accessibility slider
+            const professorAccessibilityLabel = document.createElement('span');
+            professorAccessibilityLabel.style.marginBottom = '3%';
+            professorAccessibilityLabel.style.marginLeft = '1.5%';
+            professorAccessibilityLabel.textContent = 'Professor accessibility: ';
+            addReviewContainer.appendChild(professorAccessibilityLabel);
+            const professorAccessibilitySlider = document.createElement('input');
+            professorAccessibilitySlider.style.marginBottom = '3%';
+            professorAccessibilitySlider.setAttribute('type', 'range');
+            professorAccessibilitySlider.setAttribute('min', '1');
+            professorAccessibilitySlider.setAttribute('max', '5');
+            professorAccessibilitySlider.classList.add('review-slider');
+            professorAccessibilitySlider.style.marginRight = '6%';
+            addReviewContainer.appendChild(professorAccessibilitySlider);
+
+            //workload toggle
+            const workloadLabel = document.createElement('span');
+            workloadLabel.style.marginBottom = '3%';
+            workloadLabel.textContent = 'Workload: ';
+            addReviewContainer.appendChild(workloadLabel);
+            const workloadSlider = document.createElement('input');
+            workloadSlider.style.marginBottom = '3%';
+            workloadSlider.setAttribute('type', 'range');
+            workloadSlider.setAttribute('min', '1');
+            workloadSlider.setAttribute('max', '5');
+            workloadSlider.classList.add('review-slider');
+            workloadSlider.style.marginRight = '6%';
+            addReviewContainer.appendChild(workloadSlider);
+
+            //difficulty slider
+            const difficultyLabel = document.createElement('span');
+            difficultyLabel.style.marginBottom = '3%';
+            difficultyLabel.textContent = 'Difficulty: ';
+            addReviewContainer.appendChild(difficultyLabel);
+            const difficultySlider = document.createElement('input');
+            difficultySlider.style.marginBottom = '3%';
+            difficultySlider.setAttribute('type', 'range');
+            difficultySlider.setAttribute('min', '1');
+            difficultySlider.setAttribute('max', '5');
+            difficultySlider.classList.add('review-slider');
+            difficultySlider.style.marginRight = '6%';
+            addReviewContainer.appendChild(difficultySlider);
+
+            //overall score slider
+            const overallScoreLabel = document.createElement('span');
+            overallScoreLabel.style.marginBottom = '3%';
+            overallScoreLabel.textContent = 'Overall score: ';
+            addReviewContainer.appendChild(overallScoreLabel);
+            const overallScoreSlider = document.createElement('input');
+            overallScoreSlider.style.marginBottom = '3%';
+            overallScoreSlider.setAttribute('type', 'range');
+            overallScoreSlider.setAttribute('min', '1');
+            overallScoreSlider.setAttribute('max', '5');
+            overallScoreSlider.classList.add('review-slider');
+            addReviewContainer.appendChild(overallScoreSlider);
+            addReviewContainer.appendChild(document.createElement('br'));
+
+            //textbook required toggle
+            const textbookRequiredLabel = document.createElement('span');
+            textbookRequiredLabel.style.marginBottom = '3%';
+            textbookRequiredLabel.style.marginLeft = '1.5%';
+            textbookRequiredLabel.textContent = 'Textbook: ';
+            addReviewContainer.appendChild(textbookRequiredLabel);
+            const textbookRequiredToggle = document.createElement('input');
+            textbookRequiredToggle.style.marginBottom = '3%';
+            textbookRequiredToggle.setAttribute('type', 'checkbox');
+            textbookRequiredToggle.classList.add('review-checkbox');
+            textbookRequiredToggle.style.marginRight = '11%';
+            addReviewContainer.appendChild(textbookRequiredToggle);
+    
+            //participation toggle
+            const participationLabel = document.createElement('span');
+            participationLabel.style.marginBottom = '3%';
+            participationLabel.textContent = 'Participation: ';
+            addReviewContainer.appendChild(participationLabel);
+            const participationToggle = document.createElement('input');
+            participationToggle.style.marginBottom = '3%';
+            participationToggle.setAttribute('type', 'checkbox');
+            participationToggle.classList.add('review-checkbox');
+            participationToggle.style.marginRight = '11%';
+            addReviewContainer.appendChild(participationToggle);
+            
+            //attendance toggle
+            const attendanceLabel = document.createElement('span');
+            attendanceLabel.style.marginBottom = '3%';
+            attendanceLabel.textContent = 'Attendance: ';
+            addReviewContainer.appendChild(attendanceLabel);
+            const attendanceToggle = document.createElement('input');
+            attendanceToggle.style.marginBottom = '3%';
+            attendanceToggle.setAttribute('type', 'checkbox');
+            attendanceToggle.classList.add('review-checkbox');
+            attendanceToggle.style.marginRight = '11%';
+            addReviewContainer.appendChild(attendanceToggle);
+
+            //group project toggle
+            const groupProjectLabel = document.createElement('span');
+            groupProjectLabel.style.marginBottom = '3%';
+            groupProjectLabel.textContent = 'Group project: ';
+            addReviewContainer.appendChild(groupProjectLabel);
+            const groupProjectToggle = document.createElement('input');
+            groupProjectToggle.style.marginBottom = '3%';
+            groupProjectToggle.setAttribute('type', 'checkbox');
+            groupProjectToggle.classList.add('review-checkbox');
+            groupProjectToggle.style.marginRight = '11%';
+            addReviewContainer.appendChild(groupProjectToggle);
+
+            //extra credit toggle
+            const extraCreditLabel = document.createElement('span');
+            extraCreditLabel.style.marginBottom = '3%';
+            extraCreditLabel.textContent = 'Extra Credit: ';
+            addReviewContainer.appendChild(extraCreditLabel);
+            const extraCreditToggle = document.createElement('input');
+            extraCreditToggle.style.marginBottom = '3%';
+            extraCreditToggle.setAttribute('type', 'checkbox');
+            extraCreditToggle.classList.add('review-checkbox');
+            addReviewContainer.appendChild(extraCreditToggle);
+            addReviewContainer.appendChild(document.createElement('br'));
+
+            //pop quiz toggle
+            const popQuizzesLabel = document.createElement('span');
+            popQuizzesLabel.style.marginBottom = '2.5%';
+            popQuizzesLabel.style.marginLeft = '1.5%';
+            popQuizzesLabel.textContent = 'Pop-quizzes: ';
+            addReviewContainer.appendChild(popQuizzesLabel);
+            const popQuizzesToggle = document.createElement('input');
+            popQuizzesToggle.style.marginBottom = '2.5%';
+            popQuizzesToggle.setAttribute('type', 'checkbox');
+            popQuizzesToggle.classList.add('review-checkbox');
+            popQuizzesToggle.style.marginRight = '14%';
+            addReviewContainer.appendChild(popQuizzesToggle);
+
+            //quiz question type selector
+            const quizQTypeLabel = document.createElement('span');
+            quizQTypeLabel.style.marginBottom = '4%';
+            quizQTypeLabel.textContent = 'Question type: ';
+            quizQTypeLabel.style.marginRight = '1%';
+            addReviewContainer.appendChild(quizQTypeLabel);
+            const quizQTypeWrapper = document.createElement('div');
+            quizQTypeWrapper.style.marginBottom = '2.5%';
+            quizQTypeWrapper.style.display = 'inline';
+            const quizTypes = ['Multiple Choice', 'Short Response', 'Both'];
+            quizTypes.forEach(type => {
+            const radioInput = document.createElement('input');
+            radioInput.setAttribute('type', 'radio');
+            radioInput.setAttribute('name', 'quizQType');
+            radioInput.value = type;
+            radioInput.style.marginBottom = '2.5%';
+            quizQTypeWrapper.appendChild(radioInput);
+            quizQTypeWrapper.style.fontSize = '16px';
+            const label = document.createElement('label');
+            label.style.marginRight = '3%';
+            label.textContent = type;
+            quizQTypeWrapper.appendChild(label);
+            });
+            quizQTypeWrapper.style.marginRight = '3%';
+            addReviewContainer.appendChild(quizQTypeWrapper);
+
+            //add reviewer button
+            const addReviewButton = document.createElement('button');
+            addReviewButton.style.marginLeft = '17%';
+            addReviewButton.style.marginBottom = '2.5%';
+            addReviewButton.textContent = 'Add Review';
+            addReviewButton.classList.add('review-submit-button');
+            addReviewButton.style.padding = '8px 16px';
+            addReviewButton.style.fontSize = '16px';
+            addReviewButton.style.backgroundColor = '#007bff';
+            addReviewButton.style.color = 'white';
+            addReviewButton.style.border = 'none';
+            if(!sessionStorage.getItem('reviewerId'))
+                addReviewButton.disabled = true;
+            else
+                addReviewButton.style.cursor = 'pointer';
+            addReviewButton.addEventListener('click', async function() {
+                if (!sessionStorage.getItem('reviewerId')) {
+                    alert('Please log in to add a review.');
+                    return;
+                }
+            
+                // Gather data from the form
+                const reviewData = {
+                    reviewer: sessionStorage.getItem('reviewerId'),
+                    professor: professor._id,
+                    fullName: fullNameInput.value, // This seems like additional data not in your schema
+                    course: courseDropdown.value || undefined, // If no course is selected, send undefined
+                    anonymousReviews: anonymousReviewToggle.checked,
+                    professorAccessibility: parseInt(professorAccessibilitySlider.value),
+                    workload: parseInt(workloadSlider.value),
+                    difficulty: parseInt(difficultySlider.value),
+                    overallScore: parseInt(overallScoreSlider.value),
+                    textbook: textbookRequiredToggle.checked,
+                    participation: participationToggle.checked,
+                    attendance: attendanceToggle.checked,
+                    groupProject: groupProjectToggle.checked,
+                    extraCredit: extraCreditToggle.checked,
+                    popQuizzes: popQuizzesToggle.checked,
+                    quizQType: document.querySelector('input[name="quizQType"]:checked').value
+                };
+                console.error('review data1', JSON.stringify(reviewData));
+            
+                // Make a POST request to add the review
+                try {
+                    const response = await fetch('/reviews', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(reviewData)
+                    });
+            
+                    if (response.ok) {
+                        //reset dropdown, toggles, and sliders
+                        courseDropdown.selectedIndex = 0;
+                        document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
+                            radio.checked = false;
+                        });
+                        [anonymousReviewToggle, textbookRequiredToggle, participationToggle, attendanceToggle, groupProjectToggle, extraCreditToggle, popQuizzesToggle].forEach(toggle => {
+                            toggle.checked = false;
+                        });
+                        [professorAccessibilitySlider, workloadSlider, difficultySlider, overallScoreSlider].forEach(slider => {
+                            slider.value = slider.min; // Resets to the minimum value
+                        });
+                    } else {
+                        console.error('review data', JSON.stringify(reviewData));
+                        console.error('Failed to add review:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error during adding review:', error);
+                }
+            });
+            addReviewContainer.appendChild(addReviewButton);
+
         });
 
         deleteButton.addEventListener("click", async function () {
@@ -714,7 +1044,4 @@ async function fetchAndFillUserData() {
         }
     }
 }
-
-
-//
 

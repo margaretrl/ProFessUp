@@ -304,19 +304,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const addReviewContainer = document.querySelector('.add-review-container');
             addReviewContainer.style.border = '8px solid #28a745';
 
+            const errorMessage = document.createElement('span');
+            errorMessage.style.color = 'red';
+            errorMessage.style.justifyContent = 'center';
+            errorMessage.style.alignItems = 'center';
+            errorMessage.style.visibility = 'hidden';
+            errorMessage.style.display = 'none';
             //error message when not logged in
             if(!sessionStorage.getItem('reviewerId'))
             {
-                const errorMessage = document.createElement('span');
-                errorMessage.style.color = 'red';
-                errorMessage.textContent = "Please login first to write a review";
+                errorMessage.style.visibility = 'visible';
                 errorMessage.style.display = 'flex';
-                errorMessage.style.justifyContent = 'center';
-                errorMessage.style.alignItems = 'center';
-                addReviewContainer.appendChild(errorMessage);
-                addReviewContainer.appendChild(document.createElement('br'));
-                
+                errorMessage.textContent = "Please login first to write a review";
             }
+            addReviewContainer.appendChild(errorMessage);
+            addReviewContainer.appendChild(document.createElement('br'));
             //name field (reviewer name)
             const fullNameLabel = document.createElement('span');
             fullNameLabel.style.marginBottom = '3%';
@@ -537,6 +539,9 @@ document.addEventListener('DOMContentLoaded', function() {
             radioInput.setAttribute('type', 'radio');
             radioInput.setAttribute('name', 'quizQType');
             radioInput.value = type;
+            if (type === 'Both') {
+                radioInput.checked = true;
+            }
             radioInput.style.marginBottom = '2.5%';
             quizQTypeWrapper.appendChild(radioInput);
             quizQTypeWrapper.style.fontSize = '16px';
@@ -568,6 +573,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Please log in to add a review.');
                     return;
                 }
+                if(!courseDropdown.value)
+                {
+                    errorMessage.style.visibility = 'visible';
+                    errorMessage.style.display = 'flex';
+                    errorMessage.textContent = "Please select a course";
+                }
+                else
+                {
+                    errorMessage.style.visibility = 'hidden';
+                    errorMessage.style.display = 'none';
+                }
             
                 // Gather data from the form
                 const reviewData = {
@@ -586,7 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     groupProject: groupProjectToggle.checked,
                     extraCredit: extraCreditToggle.checked,
                     popQuizzes: popQuizzesToggle.checked,
-                    quizQType: document.querySelector('input[name="quizQType"]:checked').value
+                    quizQType: document.querySelector('input[name="quizQType"]:checked').value || null
                 };
                 console.error('review data1', JSON.stringify(reviewData));
             

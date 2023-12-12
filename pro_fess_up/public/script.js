@@ -332,19 +332,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const addReviewContainer = document.querySelector('.add-review-container');
             addReviewContainer.style.border = '8px solid #28a745';
 
+            const errorMessage = document.createElement('span');
+            errorMessage.style.color = 'red';
+            errorMessage.style.justifyContent = 'center';
+            errorMessage.style.alignItems = 'center';
+            errorMessage.style.visibility = 'hidden';
+            errorMessage.style.display = 'none';
             //error message when not logged in
             if(!sessionStorage.getItem('reviewerId'))
             {
-                const errorMessage = document.createElement('span');
-                errorMessage.style.color = 'red';
-                errorMessage.textContent = " ProFessUp Your Academic Experience Here!";
+                errorMessage.style.visibility = 'visible';
                 errorMessage.style.display = 'flex';
-                errorMessage.style.justifyContent = 'center';
-                errorMessage.style.alignItems = 'center';
-                addReviewContainer.appendChild(errorMessage);
-                addReviewContainer.appendChild(document.createElement('br'));
-                
+                errorMessage.textContent = "Please login first to write a review";
             }
+            addReviewContainer.appendChild(errorMessage);
+            addReviewContainer.appendChild(document.createElement('br'));
             //name field (reviewer name)
             const fullNameLabel = document.createElement('span');
             fullNameLabel.style.marginBottom = '3%';
@@ -356,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fullNameInput.setAttribute('type', 'text');
             fullNameInput.setAttribute('placeholder', 'Full Name');
             fullNameInput.classList.add('review-input');
-            fullNameInput.style.marginBottom = '1%';
+            fullNameInput.style.marginBottom = '3%';
             fullNameInput.style.marginTop = '2.5%';
             fullNameInput.style.marginRight = '15%';
             fullNameInput.disabled = true;
@@ -384,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
             courseLabel.style.marginTop = '2.5%';
             addReviewContainer.appendChild(courseLabel);
             const courseDropdown = document.createElement('select');
-            courseDropdown.style.marginBottom = '1%';
+            courseDropdown.style.marginBottom = '3%';
             courseDropdown.style.marginTop = '2.5%';
             courseDropdown.classList.add('review-select'); // Add your desired class for styling
             // Add options to the dropdown
@@ -406,29 +408,18 @@ document.addEventListener('DOMContentLoaded', function() {
             addReviewContainer.appendChild(courseDropdown);
 
             //anonymous review toggle
-            // Anonymous review dropdown
             const anonymousReviewLabel = document.createElement('span');
-            anonymousReviewLabel.style.marginBottom = '1%';
+            anonymousReviewLabel.style.marginBottom = '3%';
             anonymousReviewLabel.style.marginTop = '2.5%';
             anonymousReviewLabel.textContent = 'Anonymous review: ';
             addReviewContainer.appendChild(anonymousReviewLabel);
 
-            const anonymousReviewDropdown = document.createElement('select');
-            anonymousReviewDropdown.style.marginBottom = '3%';
-            anonymousReviewDropdown.style.marginTop = '2.5%';
-            anonymousReviewDropdown.classList.add('review-dropdown'); // Add your desired class for styling
-            anonymousReviewDropdown.style.width = '100px';
-            anonymousReviewDropdown.style.height = '40px';
-            // Add options to the dropdown
-             const options = ['Yes', 'No'];
-             options.forEach(option => {
-             const optionElement = document.createElement('option');
-             optionElement.value = option;
-             optionElement.textContent = option;
-             anonymousReviewDropdown.appendChild(optionElement);
-            });
-
-            addReviewContainer.appendChild(anonymousReviewDropdown);
+            const anonymousReviewToggle = document.createElement('input');
+            anonymousReviewToggle.style.marginBottom = '3%';
+            anonymousReviewToggle.style.marginTop = '2.5%';
+            anonymousReviewToggle.setAttribute('type', 'checkbox');
+            anonymousReviewToggle.classList.add('review-checkbox');
+            addReviewContainer.appendChild(anonymousReviewToggle);
             addReviewContainer.appendChild(document.createElement('br'));
 
 
@@ -491,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //textbook required toggle
             const textbookRequiredLabel = document.createElement('span');
-            textbookRequiredLabel.style.marginBottom = '1%';
+            textbookRequiredLabel.style.marginBottom = '3%';
             textbookRequiredLabel.style.marginLeft = '1.5%';
             textbookRequiredLabel.textContent = 'Textbook: ';
             addReviewContainer.appendChild(textbookRequiredLabel);
@@ -504,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             //participation toggle
             const participationLabel = document.createElement('span');
-            participationLabel.style.marginBottom = '1%';
+            participationLabel.style.marginBottom = '3%';
             participationLabel.textContent = 'Participation: ';
             addReviewContainer.appendChild(participationLabel);
             const participationToggle = document.createElement('input');
@@ -516,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             //attendance toggle
             const attendanceLabel = document.createElement('span');
-            attendanceLabel.style.marginBottom = '1%';
+            attendanceLabel.style.marginBottom = '3%';
             attendanceLabel.textContent = 'Attendance: ';
             addReviewContainer.appendChild(attendanceLabel);
             const attendanceToggle = document.createElement('input');
@@ -528,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //group project toggle
             const groupProjectLabel = document.createElement('span');
-            groupProjectLabel.style.marginBottom = '1%';
+            groupProjectLabel.style.marginBottom = '3%';
             groupProjectLabel.textContent = 'Group project: ';
             addReviewContainer.appendChild(groupProjectLabel);
             const groupProjectToggle = document.createElement('input');
@@ -540,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //extra credit toggle
             const extraCreditLabel = document.createElement('span');
-            extraCreditLabel.style.marginBottom = '1%';
+            extraCreditLabel.style.marginBottom = '3%';
             extraCreditLabel.textContent = 'Extra Credit: ';
             addReviewContainer.appendChild(extraCreditLabel);
             const extraCreditToggle = document.createElement('input');
@@ -552,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //pop quiz toggle
             const popQuizzesLabel = document.createElement('span');
-            popQuizzesLabel.style.marginBottom = '1%';
+            popQuizzesLabel.style.marginBottom = '2.5%';
             popQuizzesLabel.style.marginLeft = '1.5%';
             popQuizzesLabel.textContent = 'Pop-quizzes: ';
             addReviewContainer.appendChild(popQuizzesLabel);
@@ -566,6 +557,8 @@ document.addEventListener('DOMContentLoaded', function() {
             //quiz question type selector
             const quizQTypeLabel = document.createElement('span');
             quizQTypeLabel.style.marginBottom = '1%';
+            quizQTypeLabel.textContent = 'Question type: ';
+            quizQTypeLabel.style.marginBottom = '2.5%';
             quizQTypeLabel.textContent = 'Question Type: ';
             quizQTypeLabel.style.marginRight = '1%';
             addReviewContainer.appendChild(quizQTypeLabel);
@@ -578,9 +571,12 @@ document.addEventListener('DOMContentLoaded', function() {
             radioInput.setAttribute('type', 'radio');
             radioInput.setAttribute('name', 'quizQType');
             radioInput.value = type;
+            if (type === 'Both') {
+                radioInput.checked = true;
+            }
             radioInput.style.marginBottom = '2.5%';
             quizQTypeWrapper.appendChild(radioInput);
-            quizQTypeWrapper.style.fontSize = '20px';
+            quizQTypeWrapper.style.fontSize = '16px';
             const label = document.createElement('label');
             label.style.marginRight = '3%';
             label.textContent = type;
@@ -609,6 +605,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Please log in to add a review.');
                     return;
                 }
+                if(!courseDropdown.value)
+                {
+                    errorMessage.style.visibility = 'visible';
+                    errorMessage.style.display = 'flex';
+                    errorMessage.textContent = "Please select a course";
+                }
+                else
+                {
+                    errorMessage.style.visibility = 'hidden';
+                    errorMessage.style.display = 'none';
+                }
             
                 // Gather data from the form
                 const reviewData = {
@@ -616,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     professor: professor._id,
                     fullName: fullNameInput.value, // This seems like additional data not in your schema
                     course: courseDropdown.value || undefined, // If no course is selected, send undefined
-                    anonymousReviews: anonymousReviewDropdown.value, //changed to dropdown
+                    anonymousReviews: anonymousReviewToggle.checked, //changed to dropdown
                     professorAccessibility: parseInt(professorAccessibilitySlider.value),
                     workload: parseInt(workloadSlider.value),
                     difficulty: parseInt(difficultySlider.value),
@@ -1008,32 +1015,107 @@ function displayReviews(myWindow, professorId) {
             const reviewsContainer = myWindow.document.getElementById("reviewsContainer");
             reviewsContainer.innerHTML = ''; // Clear any existing content
             //const overallRating = getOverallRatingForProfessor(professorId);
-            reviews.forEach(review => {
+            reviews.forEach(async review => {
                 const reviewDiv = myWindow.document.createElement("div");
                 reviewDiv.classList.add("review");
                 console.log(`Processing review:`, review);
+                //ADD HERE
+                const reviewerName = await fetchReviewerName(review.reviewer);
+                const courseName = await fetchCourseName(review.course);
 
+                let deleteButtonHTML = '';
+                if (sessionStorage.getItem('reviewerId') === review.reviewer) {
+                    deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px;">Delete</button>';
+                }
+                //button.style.borderRadius = "0";
                 // Populate reviewDiv with review details
                 reviewDiv.innerHTML = `
-                <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3 style="color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">Review Details</h3>
-                    <p><strong>Workload:</strong> ${review.workload}</p>
-                    <p><strong>Participation:</strong> ${review.participation ? 'Required' : 'Not Required'}</p>
-                    <p><strong>Pop Quizzes:</strong> ${review.popQuizzes ? 'Yes' : 'No'}</p>
-                    <p><strong>Difficulty:</strong> ${review.difficulty}</p>
-                    <p><strong>Overall Score:</strong> ${review.overallScore}</p>
-                    <p><strong>Group Project:</strong> ${review.groupProject ? 'Yes' : 'No'}</p>
-                    <p><strong>Professor Accessibility:</strong> ${review.professorAccessibility}</p>
-                    <p><strong>Quiz Question Type:</strong> ${review.quizQType}</p>
-                    <p><strong>Anonymous Reviews:</strong> ${review.anonymousReviews ? 'Yes' : 'No'}</p>
-                    <p><strong>Attendance:</strong> ${review.attendance ? 'Required' : 'Not Required'}</p>
-                    <p><strong>Textbook Use:</strong> ${review.textbook ? 'Required' : 'Not Required'}</p>
-                    <p><strong>Extra Credit:</strong> ${review.extraCredit ? 'Available' : 'Not Available'}</p>
-                </div>
+                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                ${deleteButtonHTML}
+                <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
+                <table style="width: 100%; text-align: left;">
+                    <tr>
+                        <td><strong>Author:</strong></td>
+                        <td>${review.anonymous ? "Anonymous" : reviewerName}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Course:</strong></td>
+                        <td>${courseName}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 30%;"><strong>Workload:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.workload}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.workload}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Participation:</strong></td>
+                        <td>${review.participation ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pop Quizzes:</strong></td>
+                        <td>${review.popQuizzes ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Difficulty:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.difficulty}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.difficulty}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overall Score:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.overallScore}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.overallScore}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Project:</strong></td>
+                        <td>${review.groupProject ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Professor Accessibility:</strong></td>
+                        <td>
+                            <input type="range" min="1" max="5" value="${review.professorAccessibility}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.professorAccessibility}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quiz Question Type:</strong></td>
+                        <td>${review.quizQType}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anonymous Reviews:</strong></td>
+                        <td>${review.anonymousReviews ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attendance:</strong></td>
+                        <td>${review.attendance ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Textbook Use:</strong></td>
+                        <td>${review.textbook ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extra Credit:</strong></td>
+                        <td>${review.extraCredit ? 'Available' : 'Not Available'}</td>
+                    </tr>
+                </table>
+            </div>   
                 `;
                 
 
                 reviewsContainer.appendChild(reviewDiv);
+
+                const deleteButton = reviewDiv.querySelector('.delete-review-button');
+                if (deleteButton) {
+                    deleteButton.addEventListener('click', function() {
+                        // Call function to handle review deletion
+                        deleteReview(review._id);
+                    });
+                }
             });
         })
         .catch(error => {
@@ -1086,3 +1168,40 @@ async function fetchAndFillUserData() {
     }
 }
 
+async function fetchReviewerName(reviewerId) {
+    const response = await fetch(`/reviewers/${reviewerId}`);
+    if (response.ok) {
+        const reviewer = await response.json();
+        console.error('fullName:', reviewer.fullName);
+        return reviewer.fullName;
+    } else {
+        console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+    }
+}
+
+// Function to handle review deletion
+async function deleteReview(reviewId) {
+        try {
+            const response = await fetch(`/reviews/${reviewId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                // Refresh the reviews display or remove the deleted review from the DOM
+            } else {
+                console.error('Error deleting review:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error during review deletion:', error);
+        }
+}
+
+async function fetchCourseName(courseId) {
+    const response = await fetch(`/courses/${courseId}`);
+    if (response.ok) {
+        const course = await response.json();
+        console.error('course name:', course.name);
+        return course.name;
+    } else {
+        console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+    }
+}

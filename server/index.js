@@ -410,6 +410,24 @@ app.get('/courses/:id', async (req, res) => {
       } 
       res.json(course);
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// DELETE course by id
+app.delete('/courses/:id', async (req, res) => {
+  console.log("DELETE Request for course with ID: ", req.params.id);
+  try {
+      const course = await Courses.findByIdAndDelete(req.params.id);
+      if (course) {
+          console.log("Course deleted successfully");
+          res.json({ message: 'Course deleted successfully' });
+      } else {
+          console.log("Course not found");
+          res.status(404).json({ message: 'Course not found' });
+      }
+  } catch (error) {
+      console.error("Error during course deletion: ", error);
       res.status(500).json({ message: error.message });
   }
 });

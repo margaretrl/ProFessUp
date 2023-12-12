@@ -210,6 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </select> 
                         <input type="text" id="courseNameInput" placeholder="Enter course name" />   
                         <button id="addCourseButton">Add Course</button>
+                        <button id="deleteCourseButton" type="button">Delete Course</button>
                     </div>    
                     <div class="professor-reviews">
                     <h2>Overall Score <span id="overallRating">Loading...</span></h2>
@@ -269,6 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                     const addCourseButton = myWindow.document.getElementById('addCourseButton');
+                    const deleteCourseButton = myWindow.document.getElementById('deleteCourseButton');
                     const courseNameInput = myWindow.document.getElementById('courseNameInput');
                     addCourseButton.addEventListener("click", async function() {
                         const courseName = courseNameInput.value;
@@ -297,6 +299,32 @@ document.addEventListener('DOMContentLoaded', function() {
                             console.error('Error adding course:', error.message);
                         }    
                         
+                    });
+
+                    //Implementation for DELETE COURSE button
+                    deleteCourseButton.addEventListener('click', async function() {
+                        //const selectedCourseId = courseSelectDropdown.value;
+                        const selectedCourseId = courseSelectDropdown.option.value;
+                        if (!selectedCourseId) {
+                            console.error('Please select a course to delete.');
+                            alert("Please select a course to delete.");
+                            return;
+                        }
+                    
+                        try {
+                            const response = await fetch(`/courses/${selectedCourseId}`, {
+                                method: 'DELETE'
+                            });
+                    
+                            if (response.ok) {
+                                console.log('Course deleted successfully');
+                                // Optionally, refresh the courses dropdown or update the UI
+                            } else {
+                                console.error('Error deleting course:', response.statusText);
+                            }
+                        } catch (error) {
+                            console.error('Error deleting course:', error.message);
+                        }
                     });
                 };
             // End of code for course selection

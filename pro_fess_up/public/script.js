@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
             {
                 const errorMessage = document.createElement('span');
                 errorMessage.style.color = 'red';
-                errorMessage.textContent = "Please login first to write a review";
+                errorMessage.textContent = " ProFessUp Your Academic Experience Here!";
                 errorMessage.style.display = 'flex';
                 errorMessage.style.justifyContent = 'center';
                 errorMessage.style.alignItems = 'center';
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fullNameInput.setAttribute('type', 'text');
             fullNameInput.setAttribute('placeholder', 'Full Name');
             fullNameInput.classList.add('review-input');
-            fullNameInput.style.marginBottom = '3%';
+            fullNameInput.style.marginBottom = '1%';
             fullNameInput.style.marginTop = '2.5%';
             fullNameInput.style.marginRight = '15%';
             fullNameInput.disabled = true;
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
             courseLabel.style.marginTop = '2.5%';
             addReviewContainer.appendChild(courseLabel);
             const courseDropdown = document.createElement('select');
-            courseDropdown.style.marginBottom = '3%';
+            courseDropdown.style.marginBottom = '1%';
             courseDropdown.style.marginTop = '2.5%';
             courseDropdown.classList.add('review-select'); // Add your desired class for styling
             // Add options to the dropdown
@@ -378,18 +378,31 @@ document.addEventListener('DOMContentLoaded', function() {
             addReviewContainer.appendChild(courseDropdown);
 
             //anonymous review toggle
+            // Anonymous review dropdown
             const anonymousReviewLabel = document.createElement('span');
-            anonymousReviewLabel.style.marginBottom = '3%';
+            anonymousReviewLabel.style.marginBottom = '1%';
             anonymousReviewLabel.style.marginTop = '2.5%';
             anonymousReviewLabel.textContent = 'Anonymous review: ';
             addReviewContainer.appendChild(anonymousReviewLabel);
-            const anonymousReviewToggle = document.createElement('input');
-            anonymousReviewToggle.style.marginBottom = '3%';
-            anonymousReviewToggle.style.marginTop = '2.5%';
-            anonymousReviewToggle.setAttribute('type', 'checkbox');
-            anonymousReviewToggle.classList.add('review-checkbox');
-            addReviewContainer.appendChild(anonymousReviewToggle);
+
+            const anonymousReviewDropdown = document.createElement('select');
+            anonymousReviewDropdown.style.marginBottom = '3%';
+            anonymousReviewDropdown.style.marginTop = '2.5%';
+            anonymousReviewDropdown.classList.add('review-dropdown'); // Add your desired class for styling
+            anonymousReviewDropdown.style.width = '100px';
+            anonymousReviewDropdown.style.height = '40px';
+            // Add options to the dropdown
+             const options = ['Yes', 'No'];
+             options.forEach(option => {
+             const optionElement = document.createElement('option');
+             optionElement.value = option;
+             optionElement.textContent = option;
+             anonymousReviewDropdown.appendChild(optionElement);
+            });
+
+            addReviewContainer.appendChild(anonymousReviewDropdown);
             addReviewContainer.appendChild(document.createElement('br'));
+
 
             //professor accessibility slider
             const professorAccessibilityLabel = document.createElement('span');
@@ -450,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //textbook required toggle
             const textbookRequiredLabel = document.createElement('span');
-            textbookRequiredLabel.style.marginBottom = '3%';
+            textbookRequiredLabel.style.marginBottom = '1%';
             textbookRequiredLabel.style.marginLeft = '1.5%';
             textbookRequiredLabel.textContent = 'Textbook: ';
             addReviewContainer.appendChild(textbookRequiredLabel);
@@ -463,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             //participation toggle
             const participationLabel = document.createElement('span');
-            participationLabel.style.marginBottom = '3%';
+            participationLabel.style.marginBottom = '1%';
             participationLabel.textContent = 'Participation: ';
             addReviewContainer.appendChild(participationLabel);
             const participationToggle = document.createElement('input');
@@ -475,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             //attendance toggle
             const attendanceLabel = document.createElement('span');
-            attendanceLabel.style.marginBottom = '3%';
+            attendanceLabel.style.marginBottom = '1%';
             attendanceLabel.textContent = 'Attendance: ';
             addReviewContainer.appendChild(attendanceLabel);
             const attendanceToggle = document.createElement('input');
@@ -487,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //group project toggle
             const groupProjectLabel = document.createElement('span');
-            groupProjectLabel.style.marginBottom = '3%';
+            groupProjectLabel.style.marginBottom = '1%';
             groupProjectLabel.textContent = 'Group project: ';
             addReviewContainer.appendChild(groupProjectLabel);
             const groupProjectToggle = document.createElement('input');
@@ -499,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //extra credit toggle
             const extraCreditLabel = document.createElement('span');
-            extraCreditLabel.style.marginBottom = '3%';
+            extraCreditLabel.style.marginBottom = '1%';
             extraCreditLabel.textContent = 'Extra Credit: ';
             addReviewContainer.appendChild(extraCreditLabel);
             const extraCreditToggle = document.createElement('input');
@@ -511,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //pop quiz toggle
             const popQuizzesLabel = document.createElement('span');
-            popQuizzesLabel.style.marginBottom = '2.5%';
+            popQuizzesLabel.style.marginBottom = '1%';
             popQuizzesLabel.style.marginLeft = '1.5%';
             popQuizzesLabel.textContent = 'Pop-quizzes: ';
             addReviewContainer.appendChild(popQuizzesLabel);
@@ -521,11 +534,11 @@ document.addEventListener('DOMContentLoaded', function() {
             popQuizzesToggle.classList.add('review-checkbox');
             popQuizzesToggle.style.marginRight = '14%';
             addReviewContainer.appendChild(popQuizzesToggle);
-
+            
             //quiz question type selector
             const quizQTypeLabel = document.createElement('span');
-            quizQTypeLabel.style.marginBottom = '4%';
-            quizQTypeLabel.textContent = 'Question type: ';
+            quizQTypeLabel.style.marginBottom = '1%';
+            quizQTypeLabel.textContent = 'Question Type: ';
             quizQTypeLabel.style.marginRight = '1%';
             addReviewContainer.appendChild(quizQTypeLabel);
             const quizQTypeWrapper = document.createElement('div');
@@ -539,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
             radioInput.value = type;
             radioInput.style.marginBottom = '2.5%';
             quizQTypeWrapper.appendChild(radioInput);
-            quizQTypeWrapper.style.fontSize = '16px';
+            quizQTypeWrapper.style.fontSize = '20px';
             const label = document.createElement('label');
             label.style.marginRight = '3%';
             label.textContent = type;
@@ -575,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     professor: professor._id,
                     fullName: fullNameInput.value, // This seems like additional data not in your schema
                     course: courseDropdown.value || undefined, // If no course is selected, send undefined
-                    anonymousReviews: anonymousReviewToggle.checked,
+                    anonymousReviews: anonymousReviewDropdown.value, //changed to dropdown
                     professorAccessibility: parseInt(professorAccessibilitySlider.value),
                     workload: parseInt(workloadSlider.value),
                     difficulty: parseInt(difficultySlider.value),

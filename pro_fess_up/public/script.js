@@ -224,6 +224,72 @@ document.addEventListener('DOMContentLoaded', function() {
                 `);
                 getOverallRatingForProfessor(myWindow, professor._id);
                 populateCoursesDropdownInMyWindow(myWindow, professor._id);
+                //TESTING
+                // Add event listeners for course selection and adding a new course
+                const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
+                courseSelectDropdown.addEventListener("change", function() {
+                    const selectedCourseName = courseSelectDropdown.options[courseSelectDropdown.selectedIndex].text;
+
+                });
+
+                const addCourseButton = myWindow.document.getElementById('addCourseButton');
+                const deleteCourseButton = myWindow.document.getElementById('deleteCourseButton');
+                const courseNameInput = myWindow.document.getElementById('courseNameInput');
+                addCourseButton.addEventListener("click", async function() {
+                    const courseName = courseNameInput.value;
+                    
+                    // Construct the course data object
+                    const courseData = { name: courseName };
+    
+                    // Make a POST request to the server's /courses endpoint
+                    try {
+                        const response = await fetch('/courses', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(courseData)
+                        });
+
+                        if (response.ok) {
+                            courseNameInput.value = ""; // Clear the input field
+                            console.log('Course added successfully');
+                            // Optionally, refresh the courses dropdown
+                        } else {
+                            console.error('Error adding course:', response.statusText);
+                        }
+                    } catch (error) {
+                        console.error('Error adding course:', error.message);
+                    }    
+                    
+                });
+                //Implementation for DELETE COURSE button
+                deleteCourseButton.addEventListener('click', async function() {
+                    //const selectedCourseId = courseSelectDropdown.value;
+                    const selectedCourseId = courseSelectDropdown.options[courseSelectDropdown.selectedIndex].value;
+                    if (!selectedCourseId) {
+                        console.error('Please select a course to delete.');
+                        alert("Please select a course to delete.");
+                        return;
+                    }
+                
+                    try {
+                        const response = await fetch(`/courses/${selectedCourseId}`, {
+                            method: 'DELETE'
+                        });
+                
+                        if (response.ok) {
+                            console.log('Course deleted successfully');
+                            // Optionally, refresh the courses dropdown or update the UI
+                        } else {
+                            console.error('Error deleting course:', response.statusText);
+                        }
+                    } catch (error) {
+                        console.error('Error deleting course:', error.message);
+                    }
+                });
+                //END TESTING
+
                 const courseDropdown = myWindow.document.getElementById("courseSelectDropdown");
                 courseDropdown.addEventListener('change', function() {
                     sessionStorage.setItem('selectedCourse', courseDropdown.value);
@@ -255,78 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 });
-                //Courses code
-                // Start of code for course selection in myWindow
-                myWindow.onload = function() {
-                    
-                    // Call to populate the course dropdown
-                    populateCoursesDropdownInMyWindow(myWindow, professor._id);
-
-                    // Add event listeners for course selection and adding a new course
-                    const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
-                    courseSelectDropdown.addEventListener("change", function() {
-                        const selectedCourseName = courseSelectDropdown.options[courseSelectDropdown.selectedIndex].text;
-
-                    });
-
-                    const addCourseButton = myWindow.document.getElementById('addCourseButton');
-                    const deleteCourseButton = myWindow.document.getElementById('deleteCourseButton');
-                    const courseNameInput = myWindow.document.getElementById('courseNameInput');
-                    addCourseButton.addEventListener("click", async function() {
-                        const courseName = courseNameInput.value;
-                        
-                        // Construct the course data object
-                        const courseData = { name: courseName };
-        
-                        // Make a POST request to the server's /courses endpoint
-                        try {
-                            const response = await fetch('/courses', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(courseData)
-                            });
-
-                            if (response.ok) {
-                                courseNameInput.value = ""; // Clear the input field
-                                console.log('Course added successfully');
-                                // Optionally, refresh the courses dropdown
-                            } else {
-                                console.error('Error adding course:', response.statusText);
-                            }
-                        } catch (error) {
-                            console.error('Error adding course:', error.message);
-                        }    
-                        
-                    });
-
-                    //Implementation for DELETE COURSE button
-                    deleteCourseButton.addEventListener('click', async function() {
-                        //const selectedCourseId = courseSelectDropdown.value;
-                        const selectedCourseId = courseSelectDropdown.option.value;
-                        if (!selectedCourseId) {
-                            console.error('Please select a course to delete.');
-                            alert("Please select a course to delete.");
-                            return;
-                        }
-                    
-                        try {
-                            const response = await fetch(`/courses/${selectedCourseId}`, {
-                                method: 'DELETE'
-                            });
-                    
-                            if (response.ok) {
-                                console.log('Course deleted successfully');
-                                // Optionally, refresh the courses dropdown or update the UI
-                            } else {
-                                console.error('Error deleting course:', response.statusText);
-                            }
-                        } catch (error) {
-                            console.error('Error deleting course:', error.message);
-                        }
-                    });
-                };
+                
             // End of code for course selection
             } else {
                 console.error("Popup window blocked or not supported by the browser.");

@@ -993,6 +993,7 @@ function displayReviews(myWindow, professorId) {
                 console.log(`Processing review:`, review);
                 //ADD HERE
                 const reviewerName = await fetchReviewerName(review.reviewer);
+                const courseName = await fetchCourseName(review.course);
 
                 let deleteButtonHTML = '';
                 if (sessionStorage.getItem('reviewerId') === review.reviewer) {
@@ -1006,11 +1007,12 @@ function displayReviews(myWindow, professorId) {
                 <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
                 <table style="width: 100%; text-align: left;">
                     <tr>
-                        <td style="width: 30%;"><strong>Author:</strong></td>
-                        <td style="width: 70%;">
-                            <input type="range" min="1" max="5" value="Author:" disabled style="background-color: #3498db; width: 80%;">
-                            <span>${review.anonymous ? "Anonymous" : reviewerName}</span>
-                        </td>
+                        <td><strong>Author:</strong></td>
+                        <td>${review.anonymous ? "Anonymous" : reviewerName}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Course:</strong></td>
+                        <td>${courseName}</td>
                     </tr>
                     <tr>
                         <td style="width: 30%;"><strong>Workload:</strong></td>
@@ -1151,14 +1153,11 @@ async function fetchReviewerName(reviewerId) {
 
 // Function to handle review deletion
 async function deleteReview(reviewId) {
-    if (confirm('Are you sure you want to delete this review?')) {
         try {
             const response = await fetch(`/reviews/${reviewId}`, {
                 method: 'DELETE'
             });
-
             if (response.ok) {
-                alert('Review deleted successfully.');
                 // Refresh the reviews display or remove the deleted review from the DOM
             } else {
                 console.error('Error deleting review:', response.statusText);
@@ -1166,5 +1165,15 @@ async function deleteReview(reviewId) {
         } catch (error) {
             console.error('Error during review deletion:', error);
         }
+}
+
+async function fetchCourseName(courseId) {
+    const response = await fetch(`/courses/${courseId}`);
+    if (response.ok) {
+        const course = await response.json();
+        console.error('course name:', course.name);
+        return course.name;
+    } else {
+        console.error('Failed to fetch reviewer data:', response.statusText, response.status);
     }
 }

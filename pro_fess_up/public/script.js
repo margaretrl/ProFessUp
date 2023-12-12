@@ -997,21 +997,71 @@ function displayReviews(myWindow, professorId) {
                     reviewerName = "Anonymous";
                 // Populate reviewDiv with review details
                 reviewDiv.innerHTML = `
-                <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h3 style="color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">Review Details</h3>
-                    <p><strong>Workload:</strong> ${review.workload}</p>
-                    <p><strong>Participation:</strong> ${review.participation ? 'Required' : 'Not Required'}</p>
-                    <p><strong>Pop Quizzes:</strong> ${review.popQuizzes ? 'Yes' : 'No'}</p>
-                    <p><strong>Difficulty:</strong> ${review.difficulty}</p>
-                    <p><strong>Overall Score:</strong> ${review.overallScore}</p>
-                    <p><strong>Group Project:</strong> ${review.groupProject ? 'Yes' : 'No'}</p>
-                    <p><strong>Professor Accessibility:</strong> ${review.professorAccessibility}</p>
-                    <p><strong>Quiz Question Type:</strong> ${review.quizQType}</p>
-                    <p><strong>Anonymous Reviews:</strong> ${review.anonymousReviews ? 'Yes' : 'No'}</p>
-                    <p><strong>Attendance:</strong> ${review.attendance ? 'Required' : 'Not Required'}</p>
-                    <p><strong>Textbook Use:</strong> ${review.textbook ? 'Required' : 'Not Required'}</p>
-                    <p><strong>Extra Credit:</strong> ${review.extraCredit ? 'Available' : 'Not Available'}</p>
-                </div>
+                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
+                <table style="width: 100%; text-align: left;">
+                    <tr>
+                        <td style="width: 30%;"><strong>Workload:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.workload}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.workload}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Participation:</strong></td>
+                        <td>${review.participation ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pop Quizzes:</strong></td>
+                        <td>${review.popQuizzes ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Difficulty:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.difficulty}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.difficulty}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overall Score:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.overallScore}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.overallScore}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Project:</strong></td>
+                        <td>${review.groupProject ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Professor Accessibility:</strong></td>
+                        <td>
+                            <input type="range" min="1" max="5" value="${review.professorAccessibility}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.professorAccessibility}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quiz Question Type:</strong></td>
+                        <td>${review.quizQType}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anonymous Reviews:</strong></td>
+                        <td>${review.anonymousReviews ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attendance:</strong></td>
+                        <td>${review.attendance ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Textbook Use:</strong></td>
+                        <td>${review.textbook ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extra Credit:</strong></td>
+                        <td>${review.extraCredit ? 'Available' : 'Not Available'}</td>
+                    </tr>
+                </table>
+            </div>   
                 `;
                 
 

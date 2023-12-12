@@ -43,8 +43,8 @@ const reviewSchema = new mongoose.Schema({
   attendance: { type: Boolean, required: false },
   textbook: { type: Boolean, required: false },
   extraCredit: { type: Boolean, required: false },
-  professor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professors', required: false }
-  //course: { type: Schema.Types.ObjectId, ref: 'Courses', required: false },
+  professor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professors', required: false },
+  course: { type: mongoose.Schema.Types.ObjectId, ref: 'Courses', required: false },
 });
 
 // Professor Schema

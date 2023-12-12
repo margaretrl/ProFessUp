@@ -223,6 +223,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 `);
                 getOverallRatingForProfessor(myWindow, professor._id);
                 populateCoursesDropdownInMyWindow(myWindow, professor._id);
+                const courseDropdown = myWindow.document.getElementById("courseSelectDropdown");
+                courseDropdown.addEventListener('change', function() {
+                    sessionStorage.setItem('selectedCourse', courseDropdown.value);
+                });
                 displayReviews(myWindow, professor._id);
                 const updateButton = myWindow.document.querySelector(".edit-button");
                 updateButton.classList.add("update-button");

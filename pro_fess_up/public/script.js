@@ -996,15 +996,19 @@ function displayReviews(myWindow, professorId) {
             const reviewsContainer = myWindow.document.getElementById("reviewsContainer");
             reviewsContainer.innerHTML = ''; // Clear any existing content
             //const overallRating = getOverallRatingForProfessor(professorId);
-            reviews.forEach(review => {
+            reviews.forEach(async review => {
                 const reviewDiv = myWindow.document.createElement("div");
                 reviewDiv.classList.add("review");
                 console.log(`Processing review:`, review);
-
+                //ADD HERE
+                const reviewerName = await fetchReviewerName(review.reviewer);
+                if(review.anonymousReviews)
+                    reviewerName = "Anonymous";
                 // Populate reviewDiv with review details
                 reviewDiv.innerHTML = `
                 <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                     <h3 style="color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">Review Details</h3>
+                    <p><strong>Author:</strong> ${reviewerName}</p>
                     <p><strong>Workload:</strong> ${review.workload}</p>
                     <p><strong>Participation:</strong> ${review.participation ? 'Required' : 'Not Required'}</p>
                     <p><strong>Pop Quizzes:</strong> ${review.popQuizzes ? 'Yes' : 'No'}</p>
@@ -1074,3 +1078,13 @@ async function fetchAndFillUserData() {
     }
 }
 
+async function fetchReviewerName(reviewerId) {
+    const response = await fetch(`/reviewers/${reviewerId}`);
+    if (response.ok) {
+        const reviewer = await response.json();
+        console.error('fullName:', reviewer.fullName);
+        return reviewer.fullName;
+    } else {
+        console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+    }
+}

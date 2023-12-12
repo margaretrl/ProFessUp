@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     groupProject: groupProjectToggle.checked,
                     extraCredit: extraCreditToggle.checked,
                     popQuizzes: popQuizzesToggle.checked,
-                    quizQType: document.querySelector('input[name="quizQType"]:checked').value || null
+                    quizQType: document.querySelector('input[name="quizQType"]:checked').value
                 };
                 console.error('review data1', JSON.stringify(reviewData));
             
@@ -991,13 +991,18 @@ function displayReviews(myWindow, professorId) {
                 console.log(`Processing review:`, review);
                 //ADD HERE
                 const reviewerName = await fetchReviewerName(review.reviewer);
-                if(review.anonymousReviews)
-                    reviewerName = "Anonymous";
+
+                let deleteButtonHTML = '';
+                if (sessionStorage.getItem('reviewerId') === review.reviewer) {
+                    deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px;">Delete</button>';
+                }
+                //button.style.borderRadius = "0";
                 // Populate reviewDiv with review details
                 reviewDiv.innerHTML = `
                 <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    ${deleteButtonHTML}
                     <h3 style="color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">Review Details</h3>
-                    <p><strong>Author:</strong> ${reviewerName}</p>
+                    <p><strong>Author:</strong> ${review.anonymous ? "Anonymous" : reviewerName}</p>
                     <p><strong>Workload:</strong> ${review.workload}</p>
                     <p><strong>Participation:</strong> ${review.participation ? 'Required' : 'Not Required'}</p>
                     <p><strong>Pop Quizzes:</strong> ${review.popQuizzes ? 'Yes' : 'No'}</p>
@@ -1006,7 +1011,6 @@ function displayReviews(myWindow, professorId) {
                     <p><strong>Group Project:</strong> ${review.groupProject ? 'Yes' : 'No'}</p>
                     <p><strong>Professor Accessibility:</strong> ${review.professorAccessibility}</p>
                     <p><strong>Quiz Question Type:</strong> ${review.quizQType}</p>
-                    <p><strong>Anonymous Reviews:</strong> ${review.anonymousReviews ? 'Yes' : 'No'}</p>
                     <p><strong>Attendance:</strong> ${review.attendance ? 'Required' : 'Not Required'}</p>
                     <p><strong>Textbook Use:</strong> ${review.textbook ? 'Required' : 'Not Required'}</p>
                     <p><strong>Extra Credit:</strong> ${review.extraCredit ? 'Available' : 'Not Available'}</p>
@@ -1015,6 +1019,14 @@ function displayReviews(myWindow, professorId) {
                 
 
                 reviewsContainer.appendChild(reviewDiv);
+
+                const deleteButton = reviewDiv.querySelector('.delete-review-button');
+                if (deleteButton) {
+                    deleteButton.addEventListener('click', function() {
+                        // Call function to handle review deletion
+                        deleteReview(review._id);
+                    });
+                }
             });
         })
         .catch(error => {
@@ -1075,5 +1087,25 @@ async function fetchReviewerName(reviewerId) {
         return reviewer.fullName;
     } else {
         console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+    }
+}
+
+// Function to handle review deletion
+async function deleteReview(reviewId) {
+    if (confirm('Are you sure you want to delete this review?')) {
+        try {
+            const response = await fetch(`/reviews/${reviewId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('Review deleted successfully.');
+                // Refresh the reviews display or remove the deleted review from the DOM
+            } else {
+                console.error('Error deleting review:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error during review deletion:', error);
+        }
     }
 }

@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to create a professor button
     function createProfessorButton(professor) {
+        sessionStorage.removeItem('selectedCourse');
         const deleteButton = document.createElement("button");
         deleteButton.classList.add("delete-professor-button");
         deleteButton.textContent = "Delete";
@@ -199,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }         
                     </style>
                     <div class="prof-data">
-                        <h1>${title}</h1>
+                        <h1 id="professor-title">${title}</h1>
                         <button class="edit-button">Edit Title</button>
                     </div>
                     <div class="course-selection">
@@ -229,7 +230,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const courseSelectDropdown = myWindow.document.getElementById("courseSelectDropdown");
                 courseSelectDropdown.addEventListener("change", function() {
                     const selectedCourseName = courseSelectDropdown.options[courseSelectDropdown.selectedIndex].text;
-
+                    sessionStorage.setItem('selectedCourse', courseSelectDropdown.options[courseSelectDropdown.selectedIndex].value);
+                    displayReviews(myWindow, professor._id);
+                    getOverallRatingForProfessor(myWindow, professor._id);
                 });
 
                 const addCourseButton = myWindow.document.getElementById('addCourseButton');
@@ -252,6 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
 
                         if (response.ok) {
+                            populateCoursesDropdownInMyWindow(myWindow, professor._id);
                             courseNameInput.value = ""; // Clear the input field
                             console.log('Course added successfully');
                             // Optionally, refresh the courses dropdown
@@ -279,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                 
                         if (response.ok) {
+                            populateCoursesDropdownInMyWindow(myWindow, professor._id);
                             console.log('Course deleted successfully');
                             // Optionally, refresh the courses dropdown or update the UI
                         } else {
@@ -289,12 +294,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 //END TESTING
-
-                const courseDropdown = myWindow.document.getElementById("courseSelectDropdown");
-                courseDropdown.addEventListener('change', function() {
-                    sessionStorage.setItem('selectedCourse', courseDropdown.value);
-                });
+                console.error('Course Dropdown value: ', courseSelectDropdown.options[courseSelectDropdown.selectedIndex].value);
                 displayReviews(myWindow, professor._id);
+                getOverallRatingForProfessor(myWindow, professor._id);
                 const updateButton = myWindow.document.querySelector(".edit-button");
                 updateButton.classList.add("update-button");
                 updateButton.textContent = "Update";
@@ -312,6 +314,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
         
                             if (response.ok) {
+                                const profTitle = myWindow.document.getElementById("professor-title");
+                                profTitle.textContent = newTitle;
                                 titleElement.textContent = newTitle;
                             } else {
                                 console.error("Error updating professor title:", response.statusText);
@@ -648,6 +652,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
             
                     if (response.ok) {
+                        displayReviews(myWindow, professor._id);
+                        getOverallRatingForProfessor(myWindow, professor._id);
                         //reset dropdown, toggles, and sliders
                         courseDropdown.selectedIndex = 0;
                         document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
@@ -693,6 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (window.location.pathname.endsWith('searchResults.html')) {
+        displayProfessors(window);
         const nameInput = document.getElementById("nameInput");
         const addProfessorButton = document.getElementById("addProfessorButton");
 
@@ -717,6 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (response.ok) {
+                    displayProfessors(window);
                     // Professor successfully added to the database
                     nameInput.value = "";
                     console.log('Professor added successfully');
@@ -727,47 +735,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error adding professor:', error.message);
             }
         });
-    }
-
-    if (window.location.pathname.endsWith('searchResults.html')) {
-        const professorsContainer = document.getElementById("professors-container");
-        const professorSearchInput = document.getElementById("professor-search");
-    
-        // Fetch professors from the server and create buttons
-        fetch("/professors")
-            .then((response) => response.json())
-            .then((professors) => {
-                // Store the original list of professors for filtering
-                const originalProfessors = professors;
-    
-                // Function to filter professors based on the search input
-                function filterProfessors(searchQuery) {
-                    const filteredProfessors = originalProfessors.filter((professor) =>
-                        professor.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-                    );
-    
-                    // Clear the professors container
-                    professorsContainer.innerHTML = "";
-    
-                    // Create buttons for filtered professors
-                    filteredProfessors.forEach((professor) => {
-                        const button = createProfessorButton(professor);
-                        professorsContainer.appendChild(button);
-                    });
-                }
-    
-                // Initial loading of professors
-                filterProfessors("");
-    
-                // Add an input event listener for live search
-                professorSearchInput.addEventListener("input", function () {
-                    const searchQuery = professorSearchInput.value;
-                    filterProfessors(searchQuery);
-                });
-            })
-            .catch((error) => {
-                console.error("Error fetching professors:", error);
-            });
     }
 
     if (window.location.pathname.endsWith('signup.html')) {
@@ -980,6 +947,47 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('#submitButton not found');
         }
     }
+
+    function displayProfessors(myWindow) {
+        const professorsContainer = document.getElementById("professors-container");
+        const professorSearchInput = document.getElementById("professor-search");
+    
+        // Fetch professors from the server and create buttons
+        fetch("/professors")
+            .then((response) => response.json())
+            .then((professors) => {
+                // Store the original list of professors for filtering
+                const originalProfessors = professors;
+    
+                // Function to filter professors based on the search input
+                function filterProfessors(searchQuery) {
+                    const filteredProfessors = originalProfessors.filter((professor) =>
+                        professor.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+    
+                    // Clear the professors container
+                    professorsContainer.innerHTML = "";
+    
+                    // Create buttons for filtered professors
+                    filteredProfessors.forEach((professor) => {
+                        const button = createProfessorButton(professor);
+                        professorsContainer.appendChild(button);
+                    });
+                }
+    
+                // Initial loading of professors
+                filterProfessors("");
+    
+                // Add an input event listener for live search
+                professorSearchInput.addEventListener("input", function () {
+                    const searchQuery = professorSearchInput.value;
+                    filterProfessors(searchQuery);
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching professors:", error);
+            });
+    }
 });
 
 
@@ -1015,105 +1023,112 @@ function displayReviews(myWindow, professorId) {
             reviewsContainer.innerHTML = ''; // Clear any existing content
             //const overallRating = getOverallRatingForProfessor(professorId);
             reviews.forEach(async review => {
-                const reviewDiv = myWindow.document.createElement("div");
-                reviewDiv.classList.add("review");
-                console.log(`Processing review:`, review);
-                //ADD HERE
-                const reviewerName = await fetchReviewerName(review.reviewer);
-                const courseName = await fetchCourseName(review.course);
+                console.error('selected course:', sessionStorage.getItem('selectedCourse'));
+                console.error('course of current review: ', review.course);
+                if (review.course == sessionStorage.getItem('selectedCourse') || !sessionStorage.getItem('selectedCourse'))
+                {
+                    const reviewDiv = myWindow.document.createElement("div");
+                    reviewDiv.classList.add("review");
+                    console.log(`Processing review:`, review);
+                    //ADD HERE
+                    const reviewerName = await fetchReviewerName(review.reviewer);
+                    const courseName = await fetchCourseName(review.course);
 
-                let deleteButtonHTML = '';
-                if (sessionStorage.getItem('reviewerId') === review.reviewer) {
-                    deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px;">Delete</button>';
-                }
-                //button.style.borderRadius = "0";
-                // Populate reviewDiv with review details
-                reviewDiv.innerHTML = `
-                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                ${deleteButtonHTML}
-                <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
-                <table style="width: 100%; text-align: left;">
-                    <tr>
-                        <td><strong>Author:</strong></td>
-                        <td>${review.anonymous ? "Anonymous" : reviewerName}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Course:</strong></td>
-                        <td>${courseName}</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 30%;"><strong>Workload:</strong></td>
-                        <td style="width: 70%;">
-                            <input type="range" min="1" max="5" value="${review.workload}" disabled style="background-color: #3498db; width: 80%;">
-                            <span>${review.workload}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Participation:</strong></td>
-                        <td>${review.participation ? 'Required' : 'Not Required'}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Pop Quizzes:</strong></td>
-                        <td>${review.popQuizzes ? 'Yes' : 'No'}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Difficulty:</strong></td>
-                        <td style="width: 70%;">
-                            <input type="range" min="1" max="5" value="${review.difficulty}" disabled style="background-color: #3498db; width: 80%;">
-                            <span>${review.difficulty}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Overall Score:</strong></td>
-                        <td style="width: 70%;">
-                            <input type="range" min="1" max="5" value="${review.overallScore}" disabled style="background-color: #3498db; width: 80%;">
-                            <span>${review.overallScore}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Group Project:</strong></td>
-                        <td>${review.groupProject ? 'Yes' : 'No'}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Professor Accessibility:</strong></td>
-                        <td>
-                            <input type="range" min="1" max="5" value="${review.professorAccessibility}" disabled style="background-color: #3498db; width: 80%;">
-                            <span>${review.professorAccessibility}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Quiz Question Type:</strong></td>
-                        <td>${review.quizQType}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Anonymous Reviews:</strong></td>
-                        <td>${review.anonymousReviews ? 'Yes' : 'No'}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Attendance:</strong></td>
-                        <td>${review.attendance ? 'Required' : 'Not Required'}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Textbook Use:</strong></td>
-                        <td>${review.textbook ? 'Required' : 'Not Required'}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Extra Credit:</strong></td>
-                        <td>${review.extraCredit ? 'Available' : 'Not Available'}</td>
-                    </tr>
-                </table>
-            </div>   
-                `;
-                
+                    let deleteButtonHTML = '';
+                    if (sessionStorage.getItem('reviewerId') === review.reviewer) {
+                        deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px;">Delete</button>';
+                    }
+                    //button.style.borderRadius = "0";
+                    // Populate reviewDiv with review details
+                    reviewDiv.innerHTML = `
+                        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                            ${deleteButtonHTML}
+                            <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
+                            <table style="width: 100%; text-align: left;">
+                                <tr>
+                                    <td><strong>Author:</strong></td>
+                                    <td>${review.anonymous ? "Anonymous" : reviewerName}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Course:</strong></td>
+                                    <td>${courseName}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%;"><strong>Workload:</strong></td>
+                                    <td style="width: 70%;">
+                                        <input type="range" min="1" max="5" value="${review.workload}" disabled style="background-color: #3498db; width: 80%;">
+                                        <span>${review.workload}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Participation:</strong></td>
+                                    <td>${review.participation ? 'Required' : 'Not Required'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pop Quizzes:</strong></td>
+                                    <td>${review.popQuizzes ? 'Yes' : 'No'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Difficulty:</strong></td>
+                                    <td style="width: 70%;">
+                                        <input type="range" min="1" max="5" value="${review.difficulty}" disabled style="background-color: #3498db; width: 80%;">
+                                        <span>${review.difficulty}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Overall Score:</strong></td>
+                                    <td style="width: 70%;">
+                                        <input type="range" min="1" max="5" value="${review.overallScore}" disabled style="background-color: #3498db; width: 80%;">
+                                        <span>${review.overallScore}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Group Project:</strong></td>
+                                    <td>${review.groupProject ? 'Yes' : 'No'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Professor Accessibility:</strong></td>
+                                    <td>
+                                        <input type="range" min="1" max="5" value="${review.professorAccessibility}" disabled style="background-color: #3498db; width: 80%;">
+                                        <span>${review.professorAccessibility}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Quiz Question Type:</strong></td>
+                                    <td>${review.quizQType}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Anonymous Reviews:</strong></td>
+                                    <td>${review.anonymousReviews ? 'Yes' : 'No'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Attendance:</strong></td>
+                                    <td>${review.attendance ? 'Required' : 'Not Required'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Textbook Use:</strong></td>
+                                    <td>${review.textbook ? 'Required' : 'Not Required'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Extra Credit:</strong></td>
+                                    <td>${review.extraCredit ? 'Available' : 'Not Available'}</td>
+                                </tr>
+                            </table>
+                        </div>   
+                    `;
+                    
 
-                reviewsContainer.appendChild(reviewDiv);
+                    reviewsContainer.appendChild(reviewDiv);
 
-                const deleteButton = reviewDiv.querySelector('.delete-review-button');
-                if (deleteButton) {
-                    deleteButton.addEventListener('click', function() {
-                        // Call function to handle review deletion
-                        deleteReview(review._id);
-                    });
+                    const deleteButton = reviewDiv.querySelector('.delete-review-button');
+                    if (deleteButton) {
+                        deleteButton.addEventListener('click', function() {
+                            // Call function to handle review deletion
+                            deleteReview(review._id);
+                            displayReviews(myWindow, professorId);
+                            getOverallRatingForProfessor(myWindow, professorId);
+                        });
+                    }
                 }
             });
         })
@@ -1122,6 +1137,7 @@ function displayReviews(myWindow, professorId) {
             myWindow.alert("Error fetching reviews: " + error.message);
         });
 }
+
 function getOverallRatingForProfessor(myWindow, professorId) {
     fetch(`/reviews/professor/${professorId}`)
         .then(response => response.json())

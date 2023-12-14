@@ -18,4 +18,5 @@ Prerequisites:
 Insert link here after compiled and uploaded to external source
 
     To Run: navigate to app directory (pro_fess_up) and enter 'npm start',
-    exit browser or ctrl C to quit. Additionaly, navigate to server directory (server) and enter 'npm start', exit browser or ctrl C to quit. 
+    exit browser or ctrl C to quit. Additionaly, navigate to server
+    directory (server) and enter 'npm start', exit browser or ctrl C to quit. 

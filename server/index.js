@@ -45,6 +45,7 @@ const reviewSchema = new mongoose.Schema({
   extraCredit: { type: Boolean, required: false },
   professor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professors', required: false },
   course: { type: mongoose.Schema.Types.ObjectId, ref: 'Courses', required: false },
+  comments: { type: String, required: false }
 });
 
 // Professor Schema
@@ -239,6 +240,7 @@ app.post('/reviews', async (req, res) => {
             extraCredit: req.body.extraCredit,
             professor: req.body.professor,
             course: req.body.course, // Uncomment when the course table is included lol
+            comments: req.body.comments,
         });
 
         const newReview = await review.save();

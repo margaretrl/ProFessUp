@@ -588,6 +588,28 @@ document.addEventListener('DOMContentLoaded', function() {
             quizQTypeWrapper.style.marginRight = '3%';
             addReviewContainer.appendChild(quizQTypeWrapper);
 
+
+            // Comments field
+            const commentsLabel = document.createElement('label'); 
+            commentsLabel.htmlFor = 'comments';
+            commentsLabel.style.display = 'block';
+            commentsLabel.style.marginBottom = '3%';
+            commentsLabel.style.marginTop = '2.5%';
+            commentsLabel.style.marginLeft = '1.5%';
+            commentsLabel.textContent = 'Comments: ';
+            addReviewContainer.appendChild(commentsLabel);
+
+            const commentsInput = document.createElement('textarea');
+            commentsInput.id = 'comments';
+            commentsInput.setAttribute('placeholder', 'Your comments here');
+            commentsInput.classList.add('review-input');
+            commentsInput.style.marginBottom = '3%';
+            commentsInput.style.marginRight = '15%';
+            commentsInput.style.width = '100%';
+            commentsInput.style.height = '100px';
+            addReviewContainer.appendChild(commentsInput);
+
+
             //add reviewer button
             const addReviewButton = document.createElement('button');
             addReviewButton.style.marginLeft = '17%';
@@ -620,6 +642,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorMessage.style.display = 'none';
                 }
             
+ 
+
                 // Gather data from the form
                 const reviewData = {
                     reviewer: sessionStorage.getItem('reviewerId'),
@@ -637,7 +661,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     groupProject: groupProjectToggle.checked,
                     extraCredit: extraCreditToggle.checked,
                     popQuizzes: popQuizzesToggle.checked,
-                    quizQType: document.querySelector('input[name="quizQType"]:checked').value
+                    quizQType: document.querySelector('input[name="quizQType"]:checked').value,
+                    comments: commentsInput.value,
                 };
                 console.error('review data1', JSON.stringify(reviewData));
             
@@ -1041,7 +1066,7 @@ function displayReviews(myWindow, professorId) {
                     //button.style.borderRadius = "0";
                     // Populate reviewDiv with review details
                     reviewDiv.innerHTML = `
-                        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                             ${deleteButtonHTML}
                             <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
                             <table style="width: 100%; text-align: left;">
@@ -1112,6 +1137,10 @@ function displayReviews(myWindow, professorId) {
                                 <tr>
                                     <td><strong>Extra Credit:</strong></td>
                                     <td>${review.extraCredit ? 'Available' : 'Not Available'}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Comments:</strong></td>
+                                    <td>${review.comments ? review.comments : 'No comments provided'}</td>
                                 </tr>
                             </table>
                         </div>   

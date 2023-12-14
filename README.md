@@ -20,7 +20,7 @@ An implementation of ratemyprofessor that includes features such as filtering my
 Insert link here after compiled and uploaded to external source
 
     To Run: 
-    1. Navigate to the marg branch
+    1. Navigate to the main branch
     2. Navigate to the backend (server) and enter 'node index.js'
     2. Navigate to app directory (pro_fess_up) and enter 'npm start',
     3. To exit browser do ctrl C to quit

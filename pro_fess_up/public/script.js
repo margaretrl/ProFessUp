@@ -294,6 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 //END TESTING
+                // pushing again
                 console.error('Course Dropdown value: ', courseSelectDropdown.options[courseSelectDropdown.selectedIndex].value);
                 displayReviews(myWindow, professor._id);
                 getOverallRatingForProfessor(myWindow, professor._id);

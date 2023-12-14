@@ -14,6 +14,8 @@ Prerequisites:
     Note: if npx or npm commands do not work (npm did not properly 
     install) after setup, use command 'npm install npm -g' 
 
+The application does not run on FSU WiFi, either use personal hotspot or another wifi conneciton.
+
 ## Documentation
 Insert link here after compiled and uploaded to external source
 

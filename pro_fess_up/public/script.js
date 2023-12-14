@@ -608,11 +608,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Please log in to add a review.');
                     return;
                 }
+                noCourse = false;
                 if(!courseDropdown.value)
                 {
                     errorMessage.style.visibility = 'visible';
                     errorMessage.style.display = 'flex';
                     errorMessage.textContent = "Please select a course";
+                    noCourse = true;
                 }
                 else
                 {
@@ -640,37 +642,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     quizQType: document.querySelector('input[name="quizQType"]:checked').value
                 };
                 console.error('review data1', JSON.stringify(reviewData));
-            
-                // Make a POST request to add the review
-                try {
-                    const response = await fetch('/reviews', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(reviewData)
-                    });
-            
-                    if (response.ok) {
-                        displayReviews(myWindow, professor._id);
-                        getOverallRatingForProfessor(myWindow, professor._id);
-                        //reset dropdown, toggles, and sliders
-                        courseDropdown.selectedIndex = 0;
-                        document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
-                            radio.checked = false;
+                if(noCourse == false)
+                {
+                    try {
+                        const response = await fetch('/reviews', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(reviewData)
                         });
-                        [anonymousReviewToggle, textbookRequiredToggle, participationToggle, attendanceToggle, groupProjectToggle, extraCreditToggle, popQuizzesToggle].forEach(toggle => {
-                            toggle.checked = false;
-                        });
-                        [professorAccessibilitySlider, workloadSlider, difficultySlider, overallScoreSlider].forEach(slider => {
-                            slider.value = slider.min; // Resets to the minimum value
-                        });
-                    } else {
-                        console.error('review data', JSON.stringify(reviewData));
-                        console.error('Failed to add review:', response.statusText);
+                
+                        if (response.ok) {
+                            displayReviews(myWindow, professor._id);
+                            getOverallRatingForProfessor(myWindow, professor._id);
+                            //reset dropdown, toggles, and sliders
+                            courseDropdown.selectedIndex = 0;
+                            document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
+                                radio.checked = false;
+                            });
+                            [anonymousReviewToggle, textbookRequiredToggle, participationToggle, attendanceToggle, groupProjectToggle, extraCreditToggle, popQuizzesToggle].forEach(toggle => {
+                                toggle.checked = false;
+                            });
+                            [professorAccessibilitySlider, workloadSlider, difficultySlider, overallScoreSlider].forEach(slider => {
+                                slider.value = slider.min; // Resets to the minimum value
+                            });
+                        } else {
+                            console.error('review data', JSON.stringify(reviewData));
+                            console.error('Failed to add review:', response.statusText);
+                        }
+                    } catch (error) {
+                        console.error('Error during adding review:', error);
                     }
-                } catch (error) {
-                    console.error('Error during adding review:', error);
                 }
             });
             addReviewContainer.appendChild(addReviewButton);
@@ -1047,7 +1050,7 @@ function displayReviews(myWindow, professorId) {
                             <table style="width: 100%; text-align: left;">
                                 <tr>
                                     <td><strong>Author:</strong></td>
-                                    <td>${review.anonymous ? "Anonymous" : reviewerName}</td>
+                                    <td>${review.anonymousReviews ? "Anonymous" : reviewerName}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Course:</strong></td>

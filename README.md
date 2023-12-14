@@ -1,4 +1,4 @@
-87e# ProFessUp
+## ProFessUp
 
 ### Members: Margaret Rivas, Jada Doby, Laura Obermaier, Marija Travoric, Jeyma Rodriguez
 

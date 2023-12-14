@@ -608,13 +608,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Please log in to add a review.');
                     return;
                 }
-                noCourse = false;
                 if(!courseDropdown.value)
                 {
                     errorMessage.style.visibility = 'visible';
                     errorMessage.style.display = 'flex';
                     errorMessage.textContent = "Please select a course";
-                    noCourse = true;
                 }
                 else
                 {
@@ -642,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     quizQType: document.querySelector('input[name="quizQType"]:checked').value
                 };
                 console.error('review data1', JSON.stringify(reviewData));
-                if(noCourse == false)
+                if(courseDropdown.value)
                 {
                     try {
                         const response = await fetch('/reviews', {

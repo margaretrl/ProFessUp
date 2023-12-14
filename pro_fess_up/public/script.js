@@ -643,59 +643,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             
  
-
-                // Gather data from the form
-                const reviewData = {
-                    reviewer: sessionStorage.getItem('reviewerId'),
-                    professor: professor._id,
-                    fullName: fullNameInput.value, // This seems like additional data not in your schema
-                    course: courseDropdown.value || undefined, // If no course is selected, send undefined
-                    anonymousReviews: anonymousReviewToggle.checked, //changed to dropdown
-                    professorAccessibility: parseInt(professorAccessibilitySlider.value),
-                    workload: parseInt(workloadSlider.value),
-                    difficulty: parseInt(difficultySlider.value),
-                    overallScore: parseInt(overallScoreSlider.value),
-                    textbook: textbookRequiredToggle.checked,
-                    participation: participationToggle.checked,
-                    attendance: attendanceToggle.checked,
-                    groupProject: groupProjectToggle.checked,
-                    extraCredit: extraCreditToggle.checked,
-                    popQuizzes: popQuizzesToggle.checked,
-                    quizQType: document.querySelector('input[name="quizQType"]:checked').value,
-                    comments: commentsInput.value,
-                };
-                console.error('review data1', JSON.stringify(reviewData));
-            
-                // Make a POST request to add the review
-                try {
-                    const response = await fetch('/reviews', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(reviewData)
-                    });
-            
-                    if (response.ok) {
-                        displayReviews(myWindow, professor._id);
-                        getOverallRatingForProfessor(myWindow, professor._id);
-                        //reset dropdown, toggles, and sliders
-                        courseDropdown.selectedIndex = 0;
-                        document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
-                            radio.checked = false;
+                if(courseDropdown.value)
+                {
+                    // Gather data from the form
+                    const reviewData = {
+                        reviewer: sessionStorage.getItem('reviewerId'),
+                        professor: professor._id,
+                        fullName: fullNameInput.value, // This seems like additional data not in your schema
+                        course: courseDropdown.value || undefined, // If no course is selected, send undefined
+                        anonymousReviews: anonymousReviewToggle.checked, //changed to dropdown
+                        professorAccessibility: parseInt(professorAccessibilitySlider.value),
+                        workload: parseInt(workloadSlider.value),
+                        difficulty: parseInt(difficultySlider.value),
+                        overallScore: parseInt(overallScoreSlider.value),
+                        textbook: textbookRequiredToggle.checked,
+                        participation: participationToggle.checked,
+                        attendance: attendanceToggle.checked,
+                        groupProject: groupProjectToggle.checked,
+                        extraCredit: extraCreditToggle.checked,
+                        popQuizzes: popQuizzesToggle.checked,
+                        quizQType: document.querySelector('input[name="quizQType"]:checked').value,
+                        comments: commentsInput.value,
+                    };
+                    console.error('review data1', JSON.stringify(reviewData));
+                
+                    // Make a POST request to add the review
+                    try {
+                        const response = await fetch('/reviews', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(reviewData)
                         });
-                        [anonymousReviewToggle, textbookRequiredToggle, participationToggle, attendanceToggle, groupProjectToggle, extraCreditToggle, popQuizzesToggle].forEach(toggle => {
-                            toggle.checked = false;
-                        });
-                        [professorAccessibilitySlider, workloadSlider, difficultySlider, overallScoreSlider].forEach(slider => {
-                            slider.value = slider.min; // Resets to the minimum value
-                        });
-                    } else {
-                        console.error('review data', JSON.stringify(reviewData));
-                        console.error('Failed to add review:', response.statusText);
+                
+                        if (response.ok) {
+                            displayReviews(myWindow, professor._id);
+                            getOverallRatingForProfessor(myWindow, professor._id);
+                            //reset dropdown, toggles, and sliders
+                            courseDropdown.selectedIndex = 0;
+                            document.querySelectorAll('input[name="quizQType"]').forEach(radio => {
+                                radio.checked = false;
+                            });
+                            [anonymousReviewToggle, textbookRequiredToggle, participationToggle, attendanceToggle, groupProjectToggle, extraCreditToggle, popQuizzesToggle].forEach(toggle => {
+                                toggle.checked = false;
+                            });
+                            [professorAccessibilitySlider, workloadSlider, difficultySlider, overallScoreSlider].forEach(slider => {
+                                slider.value = slider.min; // Resets to the minimum value
+                            });
+                        } else {
+                            console.error('review data', JSON.stringify(reviewData));
+                            console.error('Failed to add review:', response.statusText);
+                        }
+                    } catch (error) {
+                        console.error('Error during adding review:', error);
                     }
-                } catch (error) {
-                    console.error('Error during adding review:', error);
                 }
             });
             addReviewContainer.appendChild(addReviewButton);
@@ -1073,7 +1075,7 @@ function displayReviews(myWindow, professorId) {
                             <table style="width: 100%; text-align: left;">
                                 <tr>
                                     <td><strong>Author:</strong></td>
-                                    <td>${review.anonymous || !reviewerName ? "Anonymous" : reviewerName}</td>
+                                    <td>${review.anonymousReviews || !reviewerName ? "Anonymous" : reviewerName}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Course:</strong></td>

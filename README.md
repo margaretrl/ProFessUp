@@ -4,7 +4,7 @@
 
 
 ### Project Description:
-An implementation of ratemyprofessor that includes features such as filtering my school, course, major, and professor. 
+An implementation of ratemyprofessor that includes features such as filtering by school, course, major, and professor. 
 
 
 ## Dependencies

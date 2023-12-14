@@ -1061,30 +1061,32 @@ function displayReviews(myWindow, professorId) {
 
                     let deleteButtonHTML = '';
                     if (sessionStorage.getItem('reviewerId') === review.reviewer) {
-                        deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px;">Delete</button>';
+                        deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px; cursor: pointer;" onmouseover="this.style.backgroundColor=\'#216e39\'" onmouseout="this.style.backgroundColor=\'#28a745\'">Delete</button>';
                     }
                     //button.style.borderRadius = "0";
                     // Populate reviewDiv with review details
                     reviewDiv.innerHTML = `
+                    
                         <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                             ${deleteButtonHTML}
                             <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
                             <table style="width: 100%; text-align: left;">
                                 <tr>
                                     <td><strong>Author:</strong></td>
-                                    <td>${review.anonymous ? "Anonymous" : reviewerName}</td>
+                                    <td>${review.anonymous || !reviewerName ? "Anonymous" : reviewerName}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Course:</strong></td>
                                     <td>${courseName}</td>
                                 </tr>
+                                ${review.workload !== undefined && review.workload !== null ? `
                                 <tr>
                                     <td style="width: 30%;"><strong>Workload:</strong></td>
                                     <td style="width: 70%;">
                                         <input type="range" min="1" max="5" value="${review.workload}" disabled style="background-color: #3498db; width: 80%;">
                                         <span>${review.workload}</span>
                                     </td>
-                                </tr>
+                                </tr>` : ''}
                                 <tr>
                                     <td><strong>Participation:</strong></td>
                                     <td>${review.participation ? 'Required' : 'Not Required'}</td>
@@ -1123,7 +1125,7 @@ function displayReviews(myWindow, professorId) {
                                     <td>${review.quizQType}</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Anonymous Reviews:</strong></td>
+                                    <td><strong>Anonymous Review:</strong></td>
                                     <td>${review.anonymousReviews ? 'Yes' : 'No'}</td>
                                 </tr>
                                 <tr>
@@ -1199,8 +1201,6 @@ async function fetchAndFillUserData() {
                 document.getElementById('userFullName').value = reviewer.fullName || '';
                 console.error('fullName:', reviewer.fullName);
 
-                // Since the actual password should not be sent from the server,
-                // you can use a placeholder (like asterisks) to indicate a password is set
                 document.getElementById('userPassword').value = reviewer.password; // Placeholder for password
                 console.error('password:', reviewer.password);
             } else {
@@ -1210,6 +1210,124 @@ async function fetchAndFillUserData() {
             console.error('Error fetching reviewer data:', error);
         }
     }
+   // Fetch and display reviews
+   try {
+    const reviewsResponse = await fetch(`/reviews/reviewer/${reviewerId}`);
+    if (reviewsResponse.ok) {
+        const reviews = await reviewsResponse.json();
+        console.log("Reviews:", reviews); // Log the reviews to see the actual structure
+
+        const reviewsContainer = document.getElementById('reviewsContainer');
+        reviewsContainer.innerHTML = ''; // Clear previous reviews
+        
+        // Create HTML for each review and append to container
+        reviews.forEach(async review => {
+            let deleteButtonHTML = '';
+            //if (sessionStorage.getItem('reviewerId') === review.reviewer) {
+                deleteButtonHTML = '<button class="delete-review-button" style="font-size: 16px; float: right; background-color: #28a745; border: none; color: white; padding: 5px 9px; cursor: pointer;" onmouseover="this.style.backgroundColor=\'#216e39\'" onmouseout="this.style.backgroundColor=\'#28a745\'">Delete</button>';
+
+            //}
+            const profName = await fetchProfName(review.professor);
+            const courseName = await fetchCourseName(review.course);
+            const reviewDiv = document.createElement('div');
+            reviewDiv.classList.add('review');
+            reviewDiv.innerHTML = `
+            <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f8f8; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                ${deleteButtonHTML}
+            <h2 style="color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;">Review Details</h2>
+                <table style="width: 100%; text-align: left;">
+                    <tr>
+                        <td><strong>Professor:</strong></td>
+                        <td>${profName}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Course:</strong></td>
+                        <td>${courseName}</td>
+                    </tr>
+                    ${review.workload !== undefined && review.workload !== null ? `
+                    <tr>
+                        <td style="width: 30%;"><strong>Workload:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.workload}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.workload}</span>
+                        </td>
+                    </tr>` : ''}
+                    <tr>
+                        <td><strong>Participation:</strong></td>
+                        <td>${review.participation ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pop Quizzes:</strong></td>
+                        <td>${review.popQuizzes ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Difficulty:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.difficulty}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.difficulty}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overall Score:</strong></td>
+                        <td style="width: 70%;">
+                            <input type="range" min="1" max="5" value="${review.overallScore}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.overallScore}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Project:</strong></td>
+                        <td>${review.groupProject ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Professor Accessibility:</strong></td>
+                        <td>
+                            <input type="range" min="1" max="5" value="${review.professorAccessibility}" disabled style="background-color: #3498db; width: 80%;">
+                            <span>${review.professorAccessibility}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quiz Question Type:</strong></td>
+                        <td>${review.quizQType}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anonymous Review:</strong></td>
+                        <td>${review.anonymousReviews ? 'Yes' : 'No'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attendance:</strong></td>
+                        <td>${review.attendance ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Textbook Use:</strong></td>
+                        <td>${review.textbook ? 'Required' : 'Not Required'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extra Credit:</strong></td>
+                        <td>${review.extraCredit ? 'Available' : 'Not Available'}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Comments:</strong></td>
+                        <td>${review.comments ? review.comments : 'No comments provided'}</td>
+                    </tr>
+                </table>
+            </div>   
+        `;
+
+            reviewsContainer.appendChild(reviewDiv);
+            const deleteButton = reviewDiv.querySelector('.delete-review-button');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', function() {
+                    // Call function to handle review deletion
+                    deleteReview(review._id);
+                });
+            }
+        });
+    } else {
+        console.error('Failed to fetch reviews:', reviewsResponse.statusText);
+    }
+} catch (error) {
+    console.error('Error fetching reviews:', error);
+}
 }
 
 async function fetchReviewerName(reviewerId) {
@@ -1247,5 +1365,17 @@ async function fetchCourseName(courseId) {
         return course.name;
     } else {
         console.error('Failed to fetch reviewer data:', response.statusText, response.status);
+    }
+}
+
+async function fetchProfName(professorId) {
+    const response = await fetch(`/professors/${professorId}`);
+    if (response.ok) {
+        const professor = await response.json();
+        //console.error('Prof name:', professor.fullName);
+        return professor.fullName;
+    } else {
+        console.error('Failed to fetch prof data:', response.statusText, response.status);
+        return 'Unknown'; // Return a placeholder or handle the error as needed
     }
 }

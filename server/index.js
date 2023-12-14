@@ -317,17 +317,20 @@ app.get('/professors', async (req, res) => {
   }
 });
 
-// GET one reviewer
+// GET one professor
 app.get('/professors/:id', async (req, res) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
   try {
-      const professor = await Professor.findById(req.params.id);
-      if (professor) {
-          res.json(professor);
-      } else {
-          res.status(404).json({ message: 'Professor not found' });
-      }
+      const professor = await Professors.findById(id);
+      if (!professor) {
+        return res.status(404).json({ message: 'professor not found' });
+      } 
+      res.json(professor);
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
